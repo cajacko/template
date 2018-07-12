@@ -70,7 +70,7 @@ class Runner extends FileManagement {
         case 'preInstallDependencies':
           queue.push(() => {
             console.log('STEP - Installing dependencies');
-            // return this.installDependencies();
+            return this.installDependencies();
           });
 
           break;
