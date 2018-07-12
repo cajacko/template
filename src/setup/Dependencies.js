@@ -1,4 +1,4 @@
-const Utils = require('./Utils');
+const Utils = require('../utils/Utils');
 
 class Dependencies extends Utils {
   constructor() {

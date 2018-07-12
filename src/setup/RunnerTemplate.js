@@ -1,4 +1,4 @@
-const Utils = require('./Utils');
+const Utils = require('../utils/Utils');
 
 class RunnerTemplate extends Utils {
   constructor(runner) {

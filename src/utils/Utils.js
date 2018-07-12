@@ -1,8 +1,8 @@
 const { join } = require('path');
 const { readJSON } = require('fs-extra');
-const globals = require('../utils/globals');
-const runCommand = require('../utils/runCommand');
-const git = require('../utils/git');
+const globals = require('./globals');
+const runCommand = require('./runCommand');
+const git = require('./git');
 
 let destPath = process.cwd();
 
@@ -54,6 +54,20 @@ class Utils {
 
   getProjectConfig() {
     return readJSON(this.getProjectConfigPath()).catch(() => null);
+  }
+
+  getSrcDir() {
+    return this.getProjectConfig().then((config) => {
+      let src;
+
+      if (config && config.src) {
+        ({ src } = config);
+      } else {
+        src = 'src';
+      }
+
+      return this.getDestPath(src);
+    });
   }
 }
 

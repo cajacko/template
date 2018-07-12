@@ -2,6 +2,7 @@ const program = require('commander');
 const RunnerTemplate = require('./setup/RunnerTemplate');
 const ProjectTemplate = require('./setup/ProjectTemplate');
 const globals = require('./utils/globals');
+const StartTemplate = require('./start/StartTemplate');
 
 globals.set('setupFiles', {});
 globals.set('tmplPath', null);
@@ -17,8 +18,14 @@ exports.setTmplPath = (path) => {
   globals.set('tmplPath', path);
 };
 
+exports.setTemplateClasses = (classes) => {
+  globals.set('templateClasses', classes);
+};
+
 exports.run = () => {
   require('./scripts/init');
+  require('./scripts/start');
+  require('./scripts/postinstall');
 
   program.command('*', { noHelp: true }).action(() => {
     console.error('\nUnknown command given! See the help below');
@@ -31,3 +38,4 @@ exports.run = () => {
 
 exports.RunnerTemplate = RunnerTemplate;
 exports.ProjectTemplate = ProjectTemplate;
+exports.StartTemplate = StartTemplate;
