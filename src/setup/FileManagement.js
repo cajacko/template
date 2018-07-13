@@ -1,13 +1,8 @@
-const ejs = require('ejs');
 const {
-  copy,
-  ensureFile,
-  pathExists,
-  readFile,
-  writeFile,
-  writeJSON,
+  copy, ensureFile, pathExists, writeJSON,
 } = require('fs-extra');
 const Dependencies = require('./Dependencies');
+const { copyTmpl } = require('../utils/fs');
 
 class FileManagement extends Dependencies {
   constructor() {
@@ -34,13 +29,7 @@ class FileManagement extends Dependencies {
             }
 
             if (variables) {
-              return readFile(path).then((contents) => {
-                const template = ejs.compile(contents.toString());
-
-                const finalContents = template(variables);
-
-                return writeFile(dest, finalContents);
-              });
+              return copyTmpl(path, dest, variables);
             }
 
             return copy(path, dest);

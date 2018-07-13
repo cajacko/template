@@ -3,6 +3,7 @@ const { readJSON } = require('fs-extra');
 const globals = require('./globals');
 const runCommand = require('./runCommand');
 const git = require('./git');
+const fs = require('./fs');
 
 let destPath = process.cwd();
 
@@ -10,6 +11,7 @@ class Utils {
   constructor() {
     this.runCommand = runCommand;
     this.git = git;
+    this.fs = fs;
   }
 
   promiseQueue(promises, throttle = 1) {
@@ -57,6 +59,10 @@ class Utils {
   }
 
   getSrcDir() {
+    return this.getSrcRelativePath().then(src => this.getDestPath(src));
+  }
+
+  getSrcRelativePath() {
     return this.getProjectConfig().then((config) => {
       let src;
 
@@ -66,7 +72,7 @@ class Utils {
         src = 'src';
       }
 
-      return this.getDestPath(src);
+      return src;
     });
   }
 }
