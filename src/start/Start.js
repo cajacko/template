@@ -40,18 +40,22 @@ class Start extends Utils {
     return templateDir
       .setup()
       .then(templateDir.copyTemplateFiles)
-      .then(templateDir.copy || Promise.resolve)
-      .then(templateDir.installDependencies || Promise.resolve)
+      .then(() => (templateDir.copy ? templateDir.copy() : Promise.resolve()))
+      .then(() =>
+        (templateDir.installDependencies
+          ? templateDir.installDependencies()
+          : Promise.resolve()))
       .then(templateDir.copySrcFiles)
       .then(() => {
-        templateDir.run();
-
         templateDir.watchSrcFiles
           ? templateDir.watchSrcFiles()
           : templateDir._watchSrcFiles();
 
         if (this.shouldWatchTemplateDir) templateDir.watchTemplateFiles();
-      });
+      })
+      .then(() =>
+        (templateDir.postWatch ? templateDir.postWatch() : Promise.resolve()))
+      .then(templateDir.run);
   }
 }
 

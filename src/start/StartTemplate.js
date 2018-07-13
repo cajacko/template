@@ -56,11 +56,18 @@ class StartTemplate extends Utils {
   }
 
   _watchSrcFiles() {
-    return Promise.all([this.getSrcDir(), this.getTmplSrcDest()]).then(([srcEntry, srcDest]) => this.fs.syncDirs(srcEntry, srcDest, true));
+    return Promise.all([this.getSrcDir(), this.getTmplSrcDest()]).then(([srcEntry, srcDest]) =>
+      this.fs.syncDirs(srcEntry, srcDest, {
+        skipCopy: true,
+        ignore: ['node_modules'],
+      }));
   }
 
   watchTemplateFiles() {
-    return this.fs.syncDirs(this.templateSrc, this.tmpDir, true);
+    return this.fs.syncDirs(this.templateSrc, this.tmpDir, {
+      skipCopy: true,
+      ignore: ['node_modules'],
+    });
   }
 }
 

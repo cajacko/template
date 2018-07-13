@@ -69,24 +69,46 @@ const removeFile = (file, src, dest) => {
   files[file].remove();
 };
 
-module.exports = (src, dest, skipCopy) => {
+module.exports = (src, dest, options = {}) => {
+  const { skipCopy, ignore } = options;
+
+  const ifNotIgnore = (f, callback) => {
+    let shouldIgnore = false;
+
+    if (ignore) {
+      ignore.forEach((ignorePattern) => {
+        if (f.includes(ignorePattern)) shouldIgnore = true;
+      });
+    }
+
+    if (shouldIgnore) return;
+
+    callback();
+  };
+
   const watchFunc = () => {
     console.log(`sync: "${src}" with "${dest}"`);
 
     watch.createMonitor(src, (monitor) => {
       monitor.on('created', (f) => {
-        console.log(`created: ${f}`);
-        copyFile(f, src, dest);
+        ifNotIgnore(f, () => {
+          console.log(`created: ${f}`);
+          copyFile(f, src, dest);
+        });
       });
 
       monitor.on('changed', (f) => {
-        console.log(`changed: ${f}`);
-        copyFile(f, src, dest);
+        ifNotIgnore(f, () => {
+          console.log(`changed: ${f}`);
+          copyFile(f, src, dest);
+        });
       });
 
       monitor.on('removed', (f) => {
-        console.log(`removed: ${f}`);
-        removeFile(f, src, dest);
+        ifNotIgnore(f, () => {
+          console.log(`removed: ${f}`);
+          removeFile(f, src, dest);
+        });
       });
     });
 
