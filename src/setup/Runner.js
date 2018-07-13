@@ -1,5 +1,6 @@
 const inquirer = require('inquirer');
 const FileManagement = require('./FileManagement');
+const globals = require('../utils/globals');
 
 class Runner extends FileManagement {
   constructor(globalTemplates) {
@@ -17,6 +18,13 @@ class Runner extends FileManagement {
       'postInstallDependencies',
       'postRun',
     ];
+
+    const packageName = globals.get('packageName');
+    const packageVersion = globals.get('packageVersion');
+
+    this.addNodeModules({
+      [packageName]: { type: 'dev', version: packageVersion },
+    });
 
     this.prompt = (questions) => {
       if (Array.isArray(questions)) {

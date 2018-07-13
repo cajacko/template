@@ -7,8 +7,14 @@ const StartTemplate = require('./start/StartTemplate');
 globals.set('setupFiles', {});
 globals.set('tmplPath', null);
 
-exports.setVersion = version =>
-  program.version(version).arguments('<cmd> [options]');
+exports.setPackageName = (name) => {
+  globals.set('packageName', name);
+};
+
+exports.setVersion = (version) => {
+  globals.set('packageVersion', version);
+  return program.version(version).arguments('<cmd> [options]');
+};
 
 exports.setSetupFiles = (files) => {
   globals.set('setupFiles', files);
