@@ -9,3 +9,5 @@ exports.copyTmpl = (path, dest, variables = {}) =>
 
     return writeFile(dest, finalContents);
   });
+
+exports.syncDirs = require('./syncDirs');

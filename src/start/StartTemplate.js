@@ -46,16 +46,22 @@ class StartTemplate extends Utils {
         throw new Error('No src destination set in the template, run this.setSrcDestination(path) when setting up the template');
       }
 
-      return this.getSrcRelativePath().then(relativeSrc =>
-        copy(srcDir, join(this.tmpDir, this.srcDestination, relativeSrc)));
+      return this.getTmplSrcDest().then(srcPath => copy(srcDir, srcPath));
     });
   }
 
-  _watchSrcFiles() {
-    return Promise.resolve();
+  getTmplSrcDest() {
+    return this.getSrcRelativePath().then(relativeSrc =>
+      join(this.tmpDir, this.srcDestination, relativeSrc));
   }
 
-  watchTemplateFiles() {}
+  _watchSrcFiles() {
+    return Promise.all([this.getSrcDir(), this.getTmplSrcDest()]).then(([srcEntry, srcDest]) => this.fs.syncDirs(srcEntry, srcDest, true));
+  }
+
+  watchTemplateFiles() {
+    return this.fs.syncDirs(this.templateSrc, this.tmpDir, true);
+  }
 }
 
 module.exports = StartTemplate;
