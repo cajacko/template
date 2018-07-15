@@ -3,9 +3,10 @@ const FileManagement = require('./FileManagement');
 const globals = require('../utils/globals');
 
 class Runner extends FileManagement {
-  constructor(globalTemplates) {
+  constructor(globalTemplates, ensureSetupOnly) {
     super();
 
+    this.ensureSetupOnly = ensureSetupOnly;
     this.currentStep = 'init';
     this.steps = {};
     this.stepsOrder = [
@@ -41,7 +42,9 @@ class Runner extends FileManagement {
     if (globalTemplates) {
       Object.keys(globalTemplates).forEach((key) => {
         const ClassToInitiate = globalTemplates[key];
-        this[key] = new ClassToInitiate(this);
+        this[key] = new ClassToInitiate(this, {
+          ensureSetupOnly: this.ensureSetupOnly,
+        });
 
         this.stepsOrder.forEach((step) => {
           if (typeof this[key][step] === 'function') {
