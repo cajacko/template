@@ -31,6 +31,7 @@ exports.setTemplateClasses = (classes) => {
 exports.run = () => {
   require('./scripts/init');
   require('./scripts/start');
+  require('./scripts/build');
   require('./scripts/postinstall');
   require('./scripts/precommit');
 

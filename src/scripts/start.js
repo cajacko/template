@@ -5,5 +5,5 @@ const ensureSetup = require('../setup/ensureSetup');
 program.command('start').action(ensureSetup((...args) => {
   const start = new Start(...args);
 
-  return start.getTemplateToStart().then(start.startTemplate);
+  return start.getTemplate().then(start.startTemplate);
 }));

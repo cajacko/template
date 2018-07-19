@@ -1,51 +1,17 @@
-const Utils = require('../utils/Utils');
-const globals = require('../utils/globals');
+const ScriptUtils = require('../utils/ScriptUtils');
 
-class Start extends Utils {
+class Start extends ScriptUtils {
   constructor(...config) {
-    super();
-
-    this.config = config;
+    super(...config);
     this.shouldWatchTemplateDir = true;
 
     this.startTemplate = this.startTemplate.bind(this);
   }
 
-  getTemplateToStart() {
-    return this.getProjectConfig().then(config => ({
-      config: config.templates['main-site'],
-      key: 'main-site',
-    }));
-  }
-
   startTemplate({ config, key }) {
-    const templateClasses = globals.get('templateClasses');
+    const templateDir = this.getTemplateClass(key, config);
 
-    if (!templateClasses) {
-      throw new Error('No template classes have been set, you need to call setTemplateClasses');
-    }
-
-    if (!config.type) {
-      throw new Error(`The "${key}" template does not have a type set`);
-    }
-
-    const TemplateClass = templateClasses[config.type];
-
-    if (!TemplateClass) {
-      throw new Error(`No template specified for "${config.type}"`);
-    }
-
-    const templateDir = new TemplateClass(key, config);
-
-    return templateDir
-      .setup()
-      .then(templateDir.copyTemplateFiles)
-      .then(() => (templateDir.copy ? templateDir.copy() : Promise.resolve()))
-      .then(() =>
-        (templateDir.installDependencies
-          ? templateDir.installDependencies()
-          : Promise.resolve()))
-      .then(templateDir.copySrcFiles)
+    return this.prepareTemplateDir(templateDir)
       .then(() => {
         templateDir.watchSrcFiles
           ? templateDir.watchSrcFiles()
@@ -55,7 +21,7 @@ class Start extends Utils {
       })
       .then(() =>
         (templateDir.postWatch ? templateDir.postWatch() : Promise.resolve()))
-      .then(templateDir.run);
+      .then(templateDir.start);
   }
 }
 
