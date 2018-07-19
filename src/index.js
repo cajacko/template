@@ -1,3 +1,5 @@
+/* eslint global-require: 0 */
+
 const program = require('commander');
 const RunnerTemplate = require('./setup/RunnerTemplate');
 const ProjectTemplate = require('./setup/ProjectTemplate');
@@ -32,6 +34,7 @@ exports.run = () => {
   require('./scripts/init');
   require('./scripts/start');
   require('./scripts/build');
+  require('./scripts/test');
   require('./scripts/postinstall');
   require('./scripts/precommit');
 

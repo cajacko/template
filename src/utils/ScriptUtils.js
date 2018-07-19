@@ -35,15 +35,18 @@ class ScriptUtils extends Utils {
     return new TemplateClass(key, config);
   }
 
+  installDependencies(templateDir) {
+    return templateDir.installDependencies
+      ? templateDir.installDependencies()
+      : Promise.resolve();
+  }
+
   prepareTemplateDir(templateDir) {
     return templateDir
       .setup()
       .then(templateDir.copyTemplateFiles)
       .then(() => (templateDir.copy ? templateDir.copy() : Promise.resolve()))
-      .then(() =>
-        (templateDir.installDependencies
-          ? templateDir.installDependencies()
-          : Promise.resolve()))
+      .then(() => this.installDependencies(templateDir))
       .then(templateDir.copySrcFiles);
   }
 }
