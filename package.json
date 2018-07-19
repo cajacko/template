@@ -1,6 +1,6 @@
 {
   "name": "@cajacko/template",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Templating engine for projects by Charlie Jackson",
   "scripts": {
     "deploy": "yarn publish --access public"
