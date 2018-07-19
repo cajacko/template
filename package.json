@@ -1,7 +1,10 @@
 {
   "name": "@cajacko/template",
-  "version": "0.1.0",
+  "version": "0.1.5",
   "description": "Templating engine for projects by Charlie Jackson",
+  "scripts": {
+    "deploy": "yarn publish --access public"
+  },
   "main": "src/index.js",
   "repository": "git@github.com:cajacko/template.git",
   "author": "Charlie Jackson <contact@charliejackson.com>",
