@@ -32,6 +32,7 @@ exports.run = () => {
   require('./scripts/init');
   require('./scripts/start');
   require('./scripts/postinstall');
+  require('./scripts/precommit');
 
   program.command('*', { noHelp: true }).action(() => {
     console.error('\nUnknown command given! See the help below');
