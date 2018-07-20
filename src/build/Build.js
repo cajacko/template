@@ -10,10 +10,8 @@ class Build extends ScriptUtils {
   buildTemplate({ config, key }) {
     const templateDir = this.getTemplateClass(key, config);
 
-    return this.prepareTemplateDir(templateDir)
-      .then(() =>
-        (templateDir.postCopy ? templateDir.postCopy() : Promise.resolve()))
-      .then(() => templateDir.build(key));
+    return this.prepareTemplateDir(templateDir).then(() =>
+      templateDir.build(key));
   }
 }
 

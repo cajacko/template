@@ -46,6 +46,8 @@ class ScriptUtils extends Utils {
       .setup()
       .then(templateDir.copyTemplateFiles)
       .then(() => (templateDir.copy ? templateDir.copy() : Promise.resolve()))
+      .then(() =>
+        (templateDir.postCopy ? templateDir.postCopy() : Promise.resolve()))
       .then(() => this.installDependencies(templateDir))
       .then(templateDir.copySrcFiles);
   }
