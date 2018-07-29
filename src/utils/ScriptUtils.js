@@ -10,8 +10,8 @@ class ScriptUtils extends Utils {
 
   getTemplate() {
     return this.getProjectConfig().then(config => ({
-      config: config.templates['main-site'],
-      key: 'main-site',
+      config: config.templates['main-app'],
+      key: 'main-app',
     }));
   }
 

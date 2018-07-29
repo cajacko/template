@@ -1,5 +1,5 @@
 const ejs = require('ejs');
-const { readFile, writeFile } = require('fs-extra');
+const { readFile, writeFile, ensureFile } = require('fs-extra');
 
 exports.copyTmpl = (path, dest, variables = {}) =>
   readFile(path).then((contents) => {
@@ -7,7 +7,7 @@ exports.copyTmpl = (path, dest, variables = {}) =>
 
     const finalContents = template(variables);
 
-    return writeFile(dest, finalContents);
+    return ensureFile(dest).then(() => writeFile(dest, finalContents));
   });
 
 exports.syncDirs = require('./syncDirs');
