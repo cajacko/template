@@ -1,6 +1,7 @@
 const { join } = require('path');
 const { readJSON, pathExists } = require('fs-extra');
 const merge = require('lodash/merge');
+const inquirer = require('inquirer');
 const globals = require('./globals');
 const runCommand = require('./runCommand');
 const git = require('./git');
@@ -13,6 +14,7 @@ class Utils {
     this.runCommand = runCommand;
     this.git = git;
     this.fs = fs;
+    this.prompt = inquirer.prompt;
   }
 
   promiseQueue(promises, throttle = 1) {

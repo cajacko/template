@@ -9,14 +9,36 @@ class ScriptUtils extends Utils {
   }
 
   getTemplate() {
-    return this.getProjectConfig().then(config => ({
-      config: config.templates['main-app'],
-      key: 'main-app',
-    }));
+    return this.getProjectConfig().then((config) => {
+      if (!config || !config.templates) {
+        throw new Error('There is no config or templates defined in project.json');
+      }
+
+      const keys = Object.keys(config.templates);
+
+      if (!keys.length) {
+        throw new Error('There are no templates defined in project.json');
+      }
+
+      return this.prompt([
+        {
+          name: 'key',
+          type: 'list',
+          choices: keys,
+        },
+      ]).then(({ key }) => ({
+        config: config.templates[key],
+        key,
+      }));
+    });
   }
 
   getTemplateClass(key, config) {
     const templateClasses = globals.get('templateClasses');
+
+    if (!config) {
+      throw new Error('No config was passed to getTemplateClass');
+    }
 
     if (!templateClasses) {
       throw new Error('No template classes have been set, you need to call setTemplateClasses');
