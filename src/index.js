@@ -1,5 +1,7 @@
 /* eslint global-require: 0 */
 
+require('babel-register');
+
 const program = require('commander');
 const RunnerTemplate = require('./setup/RunnerTemplate');
 const ProjectTemplate = require('./setup/ProjectTemplate');
