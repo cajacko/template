@@ -3,7 +3,7 @@
   "version": "0.5.0",
   "description": "Templating engine for projects by Charlie Jackson",
   "bin": {
-    "template": "src/bin.js"
+    "template": "scripts/bin.js"
   },
   "scripts": {
     "deploy": "yarn publish --access public"
