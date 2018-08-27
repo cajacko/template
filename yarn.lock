@@ -92,6 +92,10 @@
     lodash "^4.17.5"
     to-fast-properties "^2.0.0"
 
+"@cajacko/template-utils@^0.1.2":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@cajacko/template-utils/-/template-utils-0.1.2.tgz#e6868a4a41b8c6a100e2a83ec0f49a3b35b2c86c"
+
 "@samverschueren/stream-to-observable@^0.3.0":
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/@samverschueren/stream-to-observable/-/stream-to-observable-0.3.0.tgz#ecdf48d532c58ea477acfcab80348424f8d0662f"
