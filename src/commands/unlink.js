@@ -1,13 +1,13 @@
 // @flow
 
 import {
-  linkAllNameSpacedDependencies,
+  unlinkAllNameSpacedDependencies,
   getProjectDir,
 } from '@cajacko/template-utils';
 import { NPM_NAMESPACE } from '../config/general';
 
-const link = () =>
+const unlink = () =>
   getProjectDir().then(projectDir =>
-    linkAllNameSpacedDependencies(NPM_NAMESPACE, projectDir));
+    unlinkAllNameSpacedDependencies(NPM_NAMESPACE, projectDir));
 
-export default link;
+export default unlink;
