@@ -5,6 +5,7 @@ import registerCommand from './utils/registerCommand';
 import start from './commands/start';
 
 registerCommand('start', start);
+
 registerCommand('test', () => {
   console.log('TEST');
 });
