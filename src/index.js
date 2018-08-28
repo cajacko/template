@@ -1,10 +1,9 @@
 // @flow
 
-import { registerCommand, processCommands } from '@cajacko/template-utils';
-import link from './commands/link';
-import unlink from './commands/unlink';
+import { processCommands } from '@cajacko/template-utils';
+import registerCommand from './utils/registerCommand';
+import start from './commands/start';
 
-registerCommand('link', link);
-registerCommand('unlink', unlink);
+registerCommand('start', start);
 
 processCommands(process.argv);
