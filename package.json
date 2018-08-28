@@ -33,6 +33,7 @@
     "prettier-eslint-cli": "^4.7.1"
   },
   "dependencies": {
+    "@cajacko/template-utils": "0.1.5",
     "babel-cli": "^6.26.0",
     "babel-eslint": "^8.2.3",
     "babel-plugin-styled-components": "^1.5.1",
@@ -41,7 +42,6 @@
     "babel-preset-env": "^1.6.1",
     "babel-preset-flow": "^6.23.0",
     "babel-preset-react": "^6.24.1",
-    "@cajacko/template-utils": "0.1.4",
     "babel-register": "^6.26.0",
     "commander": "^2.16.0",
     "ejs": "^2.6.1",
