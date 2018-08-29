@@ -3,9 +3,6 @@
 import { processCommands } from '@cajacko/template-utils';
 import registerCommand from './utils/registerCommand';
 import start from './commands/start';
-import { version } from '../package.json';
-
-console.log(version);
 
 registerCommand('start', start);
 

@@ -7,8 +7,14 @@ import {
   getProjectDir,
   linkAllNameSpacedDependencies,
   runCommand,
+  setSettings,
+  getSettings,
 } from '@cajacko/template-utils';
-import { NPM_NAMESPACE, SKIP_OPTION } from '../config/general';
+import {
+  NPM_NAMESPACE,
+  SKIP_OPTION,
+  IS_PROJECT_DIR_LINKED_OPTION_KEY,
+} from '../config/general';
 import buildLibIfEnabled from './buildLibIfEnabled';
 import unlinkLibs from './unlinkLibs';
 
@@ -24,29 +30,48 @@ const registerCommand = (command, callback, configArg) => {
     command,
     (...registerArgs) =>
       Promise.all([getProjectConfig(), getProjectEnv(), getProjectDir()]).then(([projectConfig, env, projectDir]) => {
-        const run = () => callback(...registerArgs, projectConfig, env);
+        const linkSettingsPath = [
+          IS_PROJECT_DIR_LINKED_OPTION_KEY,
+          projectDir,
+        ];
 
-        if (registerArgs[0][skipOptionParam]) {
-          return run();
-        }
+        return getSettings(linkSettingsPath).then((isLinked) => {
+          const run = () => callback(...registerArgs, projectConfig, env);
 
-        const runAndSkip = () => {
-          const fullCommand = `${process.argv.join(' ')} ${SKIP_OPTION}`;
+          const setLinkStatus = val => () =>
+            setSettings(val, linkSettingsPath);
 
-          return runCommand(fullCommand, projectDir);
-        };
+          if (registerArgs[0][skipOptionParam]) {
+            return run();
+          }
 
-        if (env.USE_LOCAL_LIBS) {
-          return linkAllNameSpacedDependencies(NPM_NAMESPACE, projectDir)
-            .then(() => buildLibIfEnabled(env))
+          const runAndSkip = () => {
+            const fullCommand = `${process.argv.join(' ')} ${SKIP_OPTION}`;
+
+            return runCommand(fullCommand, projectDir);
+          };
+
+          if (env.USE_LOCAL_LIBS) {
+            if (isLinked === true) {
+              return buildLibIfEnabled(env).then(runAndSkip);
+            }
+
+            return linkAllNameSpacedDependencies(NPM_NAMESPACE, projectDir)
+              .then(() => buildLibIfEnabled(env))
+              .then(setLinkStatus(true))
+              .then(runAndSkip);
+          }
+
+          if (config.ignoreUnlink) {
+            return run();
+          }
+
+          if (isLinked === false) return runAndSkip();
+
+          return unlinkLibs()
+            .then(setLinkStatus(false))
             .then(runAndSkip);
-        }
-
-        if (config.ignoreUnlink) {
-          return run();
-        }
-
-        return unlinkLibs().then(runAndSkip);
+        });
       }),
     { options: [[SKIP_OPTION], ...options] },
   );
