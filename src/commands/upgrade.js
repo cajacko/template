@@ -22,10 +22,11 @@ const updatePackage = (
     return askForNewPackageVersion(packageDir).then(version =>
       setPackageVersion(packageDir, version)
         .then(() => git.commit(packageDir, `v${version}`))
-        .then(() => git.push(packageDir))
         .then(() =>
           // Does this need to do a github one as well
           git.tag(packageDir, `v${version}`, `Published version ${version}`))
+        .then(() => git.push(packageDir))
+        .then(() => runCommand('npm publish', packageDir))
         .then(() =>
           runCommand(
             `yarn add ${githubUrl}#v${version}`,
