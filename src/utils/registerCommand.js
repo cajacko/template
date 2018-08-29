@@ -9,36 +9,50 @@ import {
   unlinkAllNameSpacedDependencies,
   runCommand,
 } from '@cajacko/template-utils';
-import { NPM_NAMESPACE } from '../config/general';
+import { NPM_NAMESPACE, SKIP_OPTION } from '../config/general';
 import buildLibIfEnabled from './buildLibIfEnabled';
 
-const registerCommand = (command, callback, options = []) =>
-  UtilsRegisterCommand(
+const registerCommand = (command, callback, configArg) => {
+  const config = typeof configArg === 'object' ? configArg : { options: [] };
+  const options = config.options || [];
+
+  const skipOptionParam = SKIP_OPTION.split('-')
+    .filter(part => !!part && !!part.length)
+    .reduce((name, val) => `${name}${val.replace(/^\w/, c => c.toUpperCase())}`);
+
+  return UtilsRegisterCommand(
     command,
     (...registerArgs) =>
       Promise.all([getProjectConfig(), getProjectEnv(), getProjectDir()]).then(([projectConfig, env, projectDir]) => {
         const run = () => callback(...registerArgs, projectConfig, env);
 
-        if (env.USE_LOCAL_LIBS) {
-          if (registerArgs[0].skipInitBuild) {
-            return run();
-          }
+        if (registerArgs[0][skipOptionParam]) {
+          return run();
+        }
 
+        const runAndSkip = () => {
+          const fullCommand = `${process.argv.join(' ')} ${SKIP_OPTION}`;
+
+          return runCommand(fullCommand, projectDir);
+        };
+
+        if (env.USE_LOCAL_LIBS) {
           return linkAllNameSpacedDependencies(NPM_NAMESPACE, projectDir)
             .then(() => buildLibIfEnabled(env))
-            .then(() => {
-              const fullCommand = `${process.argv.join(' ')} --skip-init-build`;
+            .then(runAndSkip);
+        }
 
-              return runCommand(fullCommand, projectDir);
-            });
+        if (config.ignoreUnlink) {
+          return run();
         }
 
         return unlinkAllNameSpacedDependencies(
           NPM_NAMESPACE,
           projectDir,
-        ).then(run);
+        ).then(runAndSkip);
       }),
-    { options: [['--skip-init-build'], ...options] },
+    { options: [[SKIP_OPTION], ...options] },
   );
+};
 
 export default registerCommand;
