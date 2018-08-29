@@ -1,6 +1,6 @@
 {
   "name": "@cajacko/template",
-  "version": "0.5.11",
+  "version": "0.5.12",
   "description": "Templating engine for projects by Charlie Jackson",
   "bin": {
     "template": "lib/bin.js"
@@ -53,6 +53,7 @@
     "fs-extra": "^6.0.1",
     "inquirer": "^6.0.0",
     "is-git-repository": "^1.1.1",
+    "is-symlink": "^1.0.0",
     "lodash": "^4.17.10",
     "react-dev-utils": "^5.0.1",
     "watch": "^1.0.2"

@@ -92,19 +92,6 @@
     lodash "^4.17.5"
     to-fast-properties "^2.0.0"
 
-"@cajacko/template-utils@https://github.com/cajacko/template-utils.git#v0.1.14":
-  version "0.1.14"
-  resolved "https://github.com/cajacko/template-utils.git#6e8122d31c4289d63dcfc4d3b47734506234eb68"
-  dependencies:
-    commander "^2.17.1"
-    fs-extra "^7.0.0"
-    inquirer "^6.2.0"
-    is-git-repository "^1.1.1"
-    lodash "^4.17.10"
-    react-dev-utils "^5.0.2"
-    semver "^5.5.1"
-    simple-git "^1.96.0"
-
 "@cajacko/template-utils@https://github.com/cajacko/template-utils.git#v0.1.15":
   version "0.1.15"
   resolved "https://github.com/cajacko/template-utils.git#eb8edb353ae4f95f0b85506ad6cb54346d4e09a9"
@@ -2335,6 +2322,10 @@ is-stream@^1.1.0:
 is-symbol@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/is-symbol/-/is-symbol-1.0.1.tgz#3cc59f00025194b6ab2e38dbae6689256b660572"
+
+is-symlink@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/is-symlink/-/is-symlink-1.0.0.tgz#185dd10bdd3c23ac9f602fbadc1aadd33b48e903"
 
 is-windows@^1.0.1, is-windows@^1.0.2:
   version "1.0.2"

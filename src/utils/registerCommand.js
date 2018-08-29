@@ -8,13 +8,11 @@ import {
   linkAllNameSpacedDependencies,
   runCommand,
 } from '@cajacko/template-utils';
+import isSymLinked from 'is-symlink';
+import { join } from 'path';
 import { NPM_NAMESPACE, SKIP_OPTION } from '../config/general';
 import buildLibIfEnabled from './buildLibIfEnabled';
 import unlinkLibs from './unlinkLibs';
-import {
-  get as getIsProjectDirLinked,
-  set as setIsProjectDirLinked,
-} from './isProjectDirLinked';
 
 const registerCommand = (command, callback, configArg) => {
   const config = typeof configArg === 'object' ? configArg : { options: [] };
@@ -27,47 +25,38 @@ const registerCommand = (command, callback, configArg) => {
   return UtilsRegisterCommand(
     command,
     (...registerArgs) =>
-      Promise.all([
-        getProjectConfig(),
-        getProjectEnv(),
-        getProjectDir(),
-        getIsProjectDirLinked(),
-      ]).then(([projectConfig, env, projectDir, isLinked]) => {
-        const run = () => callback(...registerArgs, projectConfig, env);
+      Promise.all([getProjectConfig(), getProjectEnv(), getProjectDir()]).then(([projectConfig, env, projectDir]) =>
+        isSymLinked(join(projectDir, 'node_modules/@cajacko/template')).then((isLinked) => {
+          const run = () => callback(...registerArgs, projectConfig, env);
 
-        const setLinkStatus = val => () => setIsProjectDirLinked(val);
-
-        if (registerArgs[0][skipOptionParam]) {
-          return run();
-        }
-
-        const runAndSkip = () => {
-          const fullCommand = `${process.argv.join(' ')} ${SKIP_OPTION}`;
-
-          return runCommand(fullCommand, projectDir);
-        };
-
-        if (env.USE_LOCAL_LIBS) {
-          if (isLinked === true) {
-            return buildLibIfEnabled(env).then(runAndSkip);
+          if (registerArgs[0][skipOptionParam]) {
+            return run();
           }
 
-          return linkAllNameSpacedDependencies(NPM_NAMESPACE, projectDir)
-            .then(() => buildLibIfEnabled(env))
-            .then(setLinkStatus(true))
-            .then(runAndSkip);
-        }
+          const runAndSkip = () => {
+            const fullCommand = `${process.argv.join(' ')} ${SKIP_OPTION}`;
 
-        if (config.ignoreUnlink) {
-          return run();
-        }
+            return runCommand(fullCommand, projectDir);
+          };
 
-        if (isLinked === false) return runAndSkip();
+          if (env.USE_LOCAL_LIBS) {
+            if (isLinked === true) {
+              return buildLibIfEnabled(env).then(runAndSkip);
+            }
 
-        return unlinkLibs()
-          .then(setLinkStatus(false))
-          .then(runAndSkip);
-      }),
+            return linkAllNameSpacedDependencies(NPM_NAMESPACE, projectDir)
+              .then(() => buildLibIfEnabled(env))
+              .then(runAndSkip);
+          }
+
+          if (config.ignoreUnlink) {
+            return run();
+          }
+
+          if (isLinked === false) return runAndSkip();
+
+          return unlinkLibs().then(runAndSkip);
+        })),
     { options: [[SKIP_OPTION], ...options] },
   );
 };

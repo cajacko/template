@@ -9,7 +9,6 @@ import {
   runCommand,
   getProjectDir,
 } from '@cajacko/template-utils';
-import { set as setIsProjectDirLinked } from '../utils/isProjectDirLinked';
 
 const updatePackage = (
   packageDir,
@@ -40,11 +39,7 @@ const updatePackage = (
   });
 
 const upgrade = () =>
-  Promise.all([
-    getSettings(['localNPMPackagePaths']),
-    getProjectDir(),
-    setIsProjectDirLinked(false),
-  ]).then(([localNPMPackagePaths, projectDir]) => {
+  Promise.all([getSettings(['localNPMPackagePaths']), getProjectDir()]).then(([localNPMPackagePaths, projectDir]) => {
     const templateUtilsDir = localNPMPackagePaths['@cajacko/template-utils'];
     const templateDir = localNPMPackagePaths['@cajacko/template'];
 
