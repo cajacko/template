@@ -92,9 +92,9 @@
     lodash "^4.17.5"
     to-fast-properties "^2.0.0"
 
-"@cajacko/template-utils@0.1.10":
-  version "0.1.10"
-  resolved "https://registry.yarnpkg.com/@cajacko/template-utils/-/template-utils-0.1.10.tgz#ae39f36ea2ed939724329f5ea960494c7d991d13"
+"@cajacko/template-utils@https://github.com/cajacko/template-utils.git#v0.1.14":
+  version "0.1.14"
+  resolved "https://github.com/cajacko/template-utils.git#6e8122d31c4289d63dcfc4d3b47734506234eb68"
   dependencies:
     commander "^2.17.1"
     fs-extra "^7.0.0"
@@ -102,10 +102,12 @@
     is-git-repository "^1.1.1"
     lodash "^4.17.10"
     react-dev-utils "^5.0.2"
+    semver "^5.5.1"
+    simple-git "^1.96.0"
 
-"@cajacko/template-utils@https://github.com/cajacko/template-utils.git#v0.1.14":
-  version "0.1.14"
-  resolved "https://github.com/cajacko/template-utils.git#6e8122d31c4289d63dcfc4d3b47734506234eb68"
+"@cajacko/template-utils@https://github.com/cajacko/template-utils.git#v0.1.15":
+  version "0.1.15"
+  resolved "https://github.com/cajacko/template-utils.git#eb8edb353ae4f95f0b85506ad6cb54346d4e09a9"
   dependencies:
     commander "^2.17.1"
     fs-extra "^7.0.0"
