@@ -6,11 +6,11 @@ import {
   getProjectEnv,
   getProjectDir,
   linkAllNameSpacedDependencies,
-  unlinkAllNameSpacedDependencies,
   runCommand,
 } from '@cajacko/template-utils';
 import { NPM_NAMESPACE, SKIP_OPTION } from '../config/general';
 import buildLibIfEnabled from './buildLibIfEnabled';
+import unlinkLibs from './unlinkLibs';
 
 const registerCommand = (command, callback, configArg) => {
   const config = typeof configArg === 'object' ? configArg : { options: [] };
@@ -46,10 +46,7 @@ const registerCommand = (command, callback, configArg) => {
           return run();
         }
 
-        return unlinkAllNameSpacedDependencies(
-          NPM_NAMESPACE,
-          projectDir,
-        ).then(runAndSkip);
+        return unlinkLibs().then(runAndSkip);
       }),
     { options: [[SKIP_OPTION], ...options] },
   );
