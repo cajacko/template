@@ -103,6 +103,19 @@
     lodash "^4.17.10"
     react-dev-utils "^5.0.2"
 
+"@cajacko/template-utils@https://github.com/cajacko/template-utils.git#v0.1.14":
+  version "0.1.14"
+  resolved "https://github.com/cajacko/template-utils.git#6e8122d31c4289d63dcfc4d3b47734506234eb68"
+  dependencies:
+    commander "^2.17.1"
+    fs-extra "^7.0.0"
+    inquirer "^6.2.0"
+    is-git-repository "^1.1.1"
+    lodash "^4.17.10"
+    react-dev-utils "^5.0.2"
+    semver "^5.5.1"
+    simple-git "^1.96.0"
+
 "@samverschueren/stream-to-observable@^0.3.0":
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/@samverschueren/stream-to-observable/-/stream-to-observable-0.3.0.tgz#ecdf48d532c58ea477acfcab80348424f8d0662f"
@@ -3512,6 +3525,10 @@ semver-compare@^1.0.0:
   version "5.5.0"
   resolved "https://registry.yarnpkg.com/semver/-/semver-5.5.0.tgz#dc4bbc7a6ca9d916dee5d43516f0092b58f7b8ab"
 
+semver@^5.5.1:
+  version "5.5.1"
+  resolved "https://registry.yarnpkg.com/semver/-/semver-5.5.1.tgz#7dfdd8814bdb7cabc7be0fb1d734cfb66c940477"
+
 set-blocking@^2.0.0, set-blocking@~2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/set-blocking/-/set-blocking-2.0.0.tgz#045f9782d011ae9a6803ddd382b24392b3d890f7"
@@ -3560,6 +3577,12 @@ shell-quote@1.6.1:
 signal-exit@^3.0.0, signal-exit@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.2.tgz#b5fdc08f1287ea1178628e415e25132b73646c6d"
+
+simple-git@^1.96.0:
+  version "1.96.0"
+  resolved "https://registry.yarnpkg.com/simple-git/-/simple-git-1.96.0.tgz#d0279b771ed89a2d1e7d9e15f9abd7f26e319d7c"
+  dependencies:
+    debug "^3.1.0"
 
 slash@^1.0.0:
   version "1.0.0"
