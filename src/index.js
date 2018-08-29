@@ -2,9 +2,11 @@
 
 import { processCommands } from '@cajacko/template-utils';
 import registerCommand from './utils/registerCommand';
-import start from './commands/start';
+import upgrade from './commands/upgrade';
 
-registerCommand('start', start);
+registerCommand('start', () => {
+  console.log('START');
+});
 
 registerCommand('test', () => {
   console.log('TEST');
@@ -14,9 +16,7 @@ registerCommand('deploy', () => {
   console.log('DEPLOY');
 });
 
-registerCommand('upgrade', () => {
-  console.log('UPRADE');
-});
+registerCommand('upgrade', upgrade);
 
 registerCommand(
   'postinstall',
