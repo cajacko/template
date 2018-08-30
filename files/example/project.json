@@ -1,0 +1,22 @@
+{
+  "title": "Example",
+  "slug": "example",
+  "description": "Example description.",
+  "authorName": "Charlie Jackson",
+  "authorUrl": "https://charliejackson.com",
+  "authorEmail": "contact@charliejackson.com",
+  "license": "MIT",
+  "templates": {
+    "main-site": {
+      "type": "website",
+      "splashIcon": "src/assets/splash-icon.png",
+      "entryFile": "src/entry.js"
+    },
+    "main-package": {
+      "type": "npm-module",
+      "bin": {
+        "example": "dist/example.js"
+      }
+    }
+  }
+}

@@ -1,9 +1,9 @@
-const Utils = require('../utils/Utils');
+// @flow
 
-class RunnerTemplate extends Utils {
+import { join } from 'path';
+
+class SetupTemplate {
   constructor(runner, options) {
-    super(runner.destPath);
-
     this.fs = runner.fs;
     this.npm = runner.npm;
 
@@ -17,6 +17,10 @@ class RunnerTemplate extends Utils {
 
     if (this.init) this.init();
   }
+
+  getTmplPath(path) {
+    return join(__dirname, '../files', path);
+  }
 }
 
-module.exports = RunnerTemplate;
+export default SetupTemplate;

@@ -1,0 +1,12 @@
+{
+  "editor.rulers": [<%= maxLineLength %>],
+  "editor.tabSize": 2,
+  "files.eol": "\n",
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true,
+  "prettier.eslintIntegration": true,
+  "prettier.printWidth": <%= maxLineLength %>,
+  "prettier.singleQuote": true,
+  "eslint.packageManager": "yarn",
+  "npm.packageManager": "yarn"
+}

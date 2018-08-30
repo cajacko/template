@@ -1,0 +1,18 @@
+{
+  "name": "graphql",
+  "version": "0.1.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "cd functions && yarn serve",
+    "firebase": "firebase",
+    "postinstall": "cd functions && yarn install"
+  },
+  "engines": {
+    "node": ">=6.14.0 <7.0.0"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "firebase-tools": "^4.2.0"
+  }
+}

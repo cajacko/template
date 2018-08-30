@@ -17,11 +17,13 @@
 // import Privacy from './Privacy';
 // import EditorConfig from './EditorConfig';
 // import GitAttributes from './GitAttributes';
-// import Changelog from './Changelog';
+import Changelog from './Changelog';
 // import JSDocs from './JSDocs';
 // import Example from './Example';
 
-const setupTemplates = {};
+const setupTemplates = {
+  changelog: Changelog,
+};
 
 // registerSetupTemplate('project', Project);
 // registerSetupTemplate('packagejson', PackageJSON);

@@ -5,10 +5,11 @@ import {
   QueuedFileManagement,
   QueuedNPMManager,
 } from '@cajacko/template-utils';
+import { join } from 'path';
 import setupTemplates from '../setup';
 
-class Setup extends StepRunner {
-  constructor() {
+class SetupRunner extends StepRunner {
+  constructor(destPath) {
     const steps = [
       'preRun',
       'preSetupFiles',
@@ -27,6 +28,9 @@ class Setup extends StepRunner {
 
     this.npm = new QueuedNPMManager();
     this.fs = new QueuedFileManagement();
+
+    this.fs.setTmplPath(join(__dirname, '../../files'));
+    this.fs.setDestPath(destPath);
 
     this.addInitialSteps();
     this.init();
@@ -49,4 +53,4 @@ class Setup extends StepRunner {
   }
 }
 
-export default Setup;
+export default SetupRunner;

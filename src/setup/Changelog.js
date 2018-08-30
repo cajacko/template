@@ -1,12 +1,9 @@
-const { RunnerTemplate } = require('@cajacko/template');
+import SetupTemplate from '../modules/SetupTemplate';
 
-class Changelog extends RunnerTemplate {
+class Changelog extends SetupTemplate {
   setupFiles() {
-    return this.runner.copyIfDoesNotExist(
-      this.getTmplPath('CHANGELOG.md'),
-      'CHANGELOG.md',
-    );
+    return this.fs.copyIfDoesNotExist('CHANGELOG.md');
   }
 }
 
-module.exports = Changelog;
+export default Changelog;

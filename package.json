@@ -6,12 +6,13 @@
     "template": "lib/bin.js"
   },
   "scripts": {
-    "build": "babel src --out-dir lib -s",
+    "build": "babel src --out-dir lib -s --copy-files",
     "watch": "yarn build --watch",
     "prepare": "yarn build"
   },
   "files": [
-    "lib/**/*"
+    "lib/**/*",
+    "files/**/*"
   ],
   "main": "src/index.js",
   "repository": "git@github.com:cajacko/template.git",

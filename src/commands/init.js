@@ -1,11 +1,13 @@
 // @flow
 
-import Setup from '../modules/Setup';
+import { getProjectDir } from '@cajacko/template-utils';
+import SetupRunner from '../modules/SetupRunner';
 
-const init = (...args) => {
-  const setup = new Setup(...args);
+const init = () =>
+  getProjectDir().then((projectDir) => {
+    const setupRunner = new SetupRunner(projectDir);
 
-  return setup.runSteps();
-};
+    return setupRunner.runSteps();
+  });
 
 export default init;
