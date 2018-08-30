@@ -1,6 +1,6 @@
 // @flow
 
-import { registerSetupTemplate } from '@cajacko/template-utils';
+// import { registerSetupTemplate } from '@cajacko/template-utils';
 // import Project from './Project';
 // import PackageJSON from './PackageJSON';
 // import Git from './Git';
