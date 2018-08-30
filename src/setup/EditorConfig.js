@@ -1,15 +1,14 @@
-const { RunnerTemplate } = require('@cajacko/template');
-const { MAX_LINE_LENGTH } = require('../config/constants');
+// @flow
 
-class EditorConfig extends RunnerTemplate {
+import SetupTemplate from '../modules/SetupTemplate';
+
+const { MAX_LINE_LENGTH } = require('../config/general');
+
+class EditorConfig extends SetupTemplate {
   setupFiles() {
-    return this.runner.copyTmpl(
-      this.getTmplPath('.editorconfig'),
-      '.editorconfig',
-      {
-        maxLineLength: MAX_LINE_LENGTH,
-      },
-    );
+    return this.fs.copyTmpl('.editorconfig', null, {
+      maxLineLength: MAX_LINE_LENGTH,
+    });
   }
 }
 

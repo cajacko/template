@@ -38,7 +38,7 @@ const registerCommand = (command, callback, configArg) => {
             return runCommand(fullCommand, projectDir);
           };
 
-          if (env.USE_LOCAL_LIBS) {
+          if (env.USE_LOCAL_LIBS || env.NO_ENV_FILE) {
             if (isLinked === true) {
               return buildLibIfEnabled(env).then(runAndSkip);
             }

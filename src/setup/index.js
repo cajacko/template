@@ -1,42 +1,42 @@
 // @flow
 
 // import { registerSetupTemplate } from '@cajacko/template-utils';
-import PackageJSON from './PackageJSON';
-import Git from './Git';
-import Eslint from './Eslint';
-import Env from './Env';
-import Flow from './Flow';
-import Jest from './Jest';
-import GitIgnore from './GitIgnore';
-import Readme from './Readme';
-import Prettier from './Prettier';
-import VSCode from './VSCode';
-import Travis from './Travis';
-import Privacy from './Privacy';
+// import PackageJSON from './PackageJSON';
+// import Git from './Git';
+// import Eslint from './Eslint';
+// import Env from './Env';
+// import Flow from './Flow';
+// import Jest from './Jest';
+// import GitIgnore from './GitIgnore';
+// import Readme from './Readme';
+// import Prettier from './Prettier';
+// import VSCode from './VSCode';
+// import Travis from './Travis';
+// import Privacy from './Privacy';
 import EditorConfig from './EditorConfig';
-import GitAttributes from './GitAttributes';
+// import GitAttributes from './GitAttributes';
 import Changelog from './Changelog';
-import JSDocs from './JSDocs';
-import Example from './Example';
+// import JSDocs from './JSDocs';
+// import Example from './Example';
 
 const setupTemplates = {
-  packagejson: PackageJSON,
-  git: Git,
-  eslint: Eslint,
-  env: Env,
-  flow: Flow,
-  jest: Jest,
-  gitignore: GitIgnore,
-  readme: Readme,
-  prettier: Prettier,
-  vscode: VSCode,
-  travis: Travis,
-  privacy: Privacy,
+  // packagejson: PackageJSON,
+  // git: Git,
+  // eslint: Eslint,
+  // env: Env,
+  // flow: Flow,
+  // jest: Jest,
+  // gitignore: GitIgnore,
+  // readme: Readme,
+  // prettier: Prettier,
+  // vscode: VSCode,
+  // travis: Travis,
+  // privacy: Privacy,
   editorconfig: EditorConfig,
-  gitattributes: GitAttributes,
+  // gitattributes: GitAttributes,
   changelog: Changelog,
-  jsdocs: JSDocs,
-  example: Example,
+  // jsdocs: JSDocs,
+  // example: Example,
 };
 
 export default setupTemplates;

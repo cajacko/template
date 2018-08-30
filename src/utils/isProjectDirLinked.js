@@ -11,6 +11,7 @@ const isProjectDirLinked = () =>
         isSymLinked(join(projectDir, 'node_modules/@cajacko/template')),
         isSymLinked(join(__dirname, '../../node_modules/@cajacko/template-utils')),
       ]))
-    .then(([link1, link2]) => link1 && link2);
+    .then(([link1, link2]) => link1 && link2)
+    .catch(() => true);
 
 export default isProjectDirLinked;
