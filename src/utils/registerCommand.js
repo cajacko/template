@@ -8,8 +8,7 @@ import {
   linkAllNameSpacedDependencies,
   runCommand,
 } from '@cajacko/template-utils';
-import isSymLinked from 'is-symlink';
-import { join } from 'path';
+import isProjectDirLinked from './isProjectDirLinked';
 import { NPM_NAMESPACE, SKIP_OPTION } from '../config/general';
 import buildLibIfEnabled from './buildLibIfEnabled';
 import unlinkLibs from './unlinkLibs';
@@ -26,7 +25,7 @@ const registerCommand = (command, callback, configArg) => {
     command,
     (...registerArgs) =>
       Promise.all([getProjectConfig(), getProjectEnv(), getProjectDir()]).then(([projectConfig, env, projectDir]) =>
-        isSymLinked(join(projectDir, 'node_modules/@cajacko/template')).then((isLinked) => {
+        isProjectDirLinked().then((isLinked) => {
           const run = () => callback(...registerArgs, projectConfig, env);
 
           if (registerArgs[0][skipOptionParam]) {
