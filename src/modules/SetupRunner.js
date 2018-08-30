@@ -9,7 +9,7 @@ import { join } from 'path';
 import setupTemplates from '../setup';
 
 class SetupRunner extends StepRunner {
-  constructor(destPath, projectConfig) {
+  constructor(destPath, projectConfig, lastVersion) {
     const steps = [
       'preRun',
       'preSetupFiles',
@@ -29,6 +29,12 @@ class SetupRunner extends StepRunner {
     this.projectConfig = projectConfig;
 
     this.npm = new QueuedNPMManager(destPath);
+
+    const gitURL = `https://github.com/cajacko/template.git#${lastVersion}`;
+
+    this.npm.add({
+      [gitURL]: { isGitURl: true },
+    });
 
     this.fs = new QueuedFileManagement(
       join(__dirname, '../../files'),
