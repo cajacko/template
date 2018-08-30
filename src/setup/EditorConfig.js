@@ -12,4 +12,4 @@ class EditorConfig extends SetupTemplate {
   }
 }
 
-module.exports = EditorConfig;
+export default EditorConfig;

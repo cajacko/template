@@ -1,5 +1,5 @@
-const { RunnerTemplate } = require('@cajacko/template');
+import SetupTemplate from '../modules/SetupTemplate';
 
-class Jest extends RunnerTemplate {}
+class Jest extends SetupTemplate {}
 
-module.exports = Jest;
+export default Jest;

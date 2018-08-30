@@ -1,18 +1,12 @@
-const { RunnerTemplate } = require('@cajacko/template');
+import SetupTemplate from '../modules/SetupTemplate';
 
-class Example extends RunnerTemplate {
+class Example extends SetupTemplate {
   setupFiles() {
     return Promise.all([
-      this.runner.copyIfDoesNotExist(
-        this.getTmplPath('example/entry.js'),
-        'src/entry.js',
-      ),
-      this.runner.copyIfDoesNotExist(
-        this.getTmplPath('example/project.json'),
-        'project.json',
-      ),
+      this.fs.copyIfDoesNotExist('example/entry.js', 'src/entry.js'),
+      this.fs.copyIfDoesNotExist('example/project.json', 'project.json'),
     ]);
   }
 }
 
-module.exports = Example;
+export default Example;

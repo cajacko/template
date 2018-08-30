@@ -1,12 +1,12 @@
-const { RunnerTemplate } = require('@cajacko/template');
+import SetupTemplate from '../modules/SetupTemplate';
 
-class JSDocs extends RunnerTemplate {
+class JSDocs extends SetupTemplate {
   setupFiles() {
     const promises = [];
 
-    promises.push(this.runner.copy(this.getTmplPath('jsdoc.json'), 'jsdoc.json'));
+    promises.push(this.fs.copy('jsdoc.json'));
 
-    promises.push(this.runner.addNodeModules({
+    promises.push(this.npm.add({
       jsdoc: { type: 'dev', version: '3.5.5' },
     }));
 
@@ -14,4 +14,4 @@ class JSDocs extends RunnerTemplate {
   }
 }
 
-module.exports = JSDocs;
+export default JSDocs;

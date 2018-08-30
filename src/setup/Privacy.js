@@ -1,13 +1,9 @@
-const { RunnerTemplate } = require('@cajacko/template');
+import SetupTemplate from '../modules/SetupTemplate';
 
-class Privacy extends RunnerTemplate {
+class Privacy extends SetupTemplate {
   setupFiles() {
-    return this.runner.copyTmpl(
-      this.getTmplPath('PRIVACY.md'),
-      'PRIVACY.md',
-      this.runner.projectConfig,
-    );
+    return this.fs.copyTmpl('PRIVACY.md', null, this.projectConfig);
   }
 }
 
-module.exports = Privacy;
+export default Privacy;

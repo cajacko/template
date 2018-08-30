@@ -1,5 +1,5 @@
-const { RunnerTemplate } = require('@cajacko/template');
+import SetupTemplate from '../modules/SetupTemplate';
 
-class Travis extends RunnerTemplate {}
+class Travis extends SetupTemplate {}
 
-module.exports = Travis;
+export default Travis;

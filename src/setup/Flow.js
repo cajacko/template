@@ -1,5 +1,5 @@
-const { RunnerTemplate } = require('@cajacko/template');
+import SetupTemplate from '../modules/SetupTemplate';
 
-class Flow extends RunnerTemplate {}
+class Flow extends SetupTemplate {}
 
-module.exports = Flow;
+export default Flow;

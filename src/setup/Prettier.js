@@ -1,5 +1,5 @@
-const { RunnerTemplate } = require('@cajacko/template');
+import SetupTemplate from '../modules/SetupTemplate';
 
-class Prettier extends RunnerTemplate {}
+class Prettier extends SetupTemplate {}
 
-module.exports = Prettier;
+export default Prettier;

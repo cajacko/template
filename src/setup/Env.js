@@ -1,10 +1,10 @@
-const { RunnerTemplate } = require('@cajacko/template');
+import SetupTemplate from '../modules/SetupTemplate';
 
-class Env extends RunnerTemplate {
+class Env extends SetupTemplate {
   setupFiles() {
-    this.runner.copyIfDoesNotExist(this.getTmplPath('.env'), '.env');
-    this.runner.copyIfDoesNotExist(this.getTmplPath('.env'), '.env.local');
+    this.fs.copyIfDoesNotExist('.env');
+    this.fs.copyIfDoesNotExist('.env', '.env.local');
   }
 }
 
-module.exports = Env;
+export default Env;

@@ -1,13 +1,13 @@
-const { RunnerTemplate } = require('@cajacko/template');
+import SetupTemplate from '../modules/SetupTemplate';
 
-class Readme extends RunnerTemplate {
+class Readme extends SetupTemplate {
   setupFiles() {
-    return this.runner.copyTmpl(
-      this.getTmplPath('readme/header.md'),
+    return this.fs.copyTmpl(
+      'readme/header.md',
       'README.md',
-      this.runner.projectConfig,
+      this.projectConfig,
     );
   }
 }
 
-module.exports = Readme;
+export default Readme;

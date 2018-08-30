@@ -1,12 +1,9 @@
-const { RunnerTemplate } = require('@cajacko/template');
+import SetupTemplate from '../modules/SetupTemplate';
 
-class GitAttributes extends RunnerTemplate {
+class GitAttributes extends SetupTemplate {
   setupFiles() {
-    return this.runner.copy(
-      this.getTmplPath('.gitattributes'),
-      '.gitattributes',
-    );
+    return this.fs.copy('.gitattributes');
   }
 }
 
-module.exports = GitAttributes;
+export default GitAttributes;

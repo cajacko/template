@@ -1,5 +1,5 @@
-const { RunnerTemplate } = require('@cajacko/template');
-const { MAX_LINE_LENGTH } = require('../config/constants');
+import SetupTemplate from '../modules/SetupTemplate';
+import { MAX_LINE_LENGTH } from '../config/general';
 
 const eslintConfig = {
   extends: ['airbnb'],
@@ -74,15 +74,15 @@ const eslintConfig = {
   },
 };
 
-class Eslint extends RunnerTemplate {
+class Eslint extends SetupTemplate {
   setupFiles() {
     // TODO: run on test script
 
     const promises = [];
 
-    promises.push(this.runner.writeJSON(eslintConfig, '.eslintrc'));
+    promises.push(this.fs.writeJSON(eslintConfig, '.eslintrc'));
 
-    promises.push(this.runner.addNodeModules({
+    promises.push(this.npm.add({
       'babel-eslint': { type: 'dev', version: '8.2.2' },
       eslint: { type: 'dev', version: '4.18.1' },
       'eslint-config-airbnb': { type: 'dev', version: '16.1.0' },
@@ -103,4 +103,4 @@ class Eslint extends RunnerTemplate {
   }
 }
 
-module.exports = Eslint;
+export default Eslint;

@@ -1,16 +1,12 @@
-const { RunnerTemplate } = require('@cajacko/template');
-const { MAX_LINE_LENGTH } = require('../config/constants');
+import SetupTemplate from '../modules/SetupTemplate';
+import { MAX_LINE_LENGTH } from '../config/general';
 
-class VSCode extends RunnerTemplate {
+class VSCode extends SetupTemplate {
   setupFiles() {
-    return this.runner.copyTmpl(
-      this.getTmplPath('.vscode/settings.json'),
-      '.vscode/settings.json',
-      {
-        maxLineLength: MAX_LINE_LENGTH,
-      },
-    );
+    return this.fs.copyTmpl('.vscode/settings.json', null, {
+      maxLineLength: MAX_LINE_LENGTH,
+    });
   }
 }
 
-module.exports = VSCode;
+export default VSCode;

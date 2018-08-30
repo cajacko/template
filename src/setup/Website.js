@@ -83,4 +83,4 @@ class Website extends StartTemplate {
   }
 }
 
-module.exports = Website;
+export default Website;

@@ -278,4 +278,4 @@ lib/...
 
 */
 
-module.exports = GraphQL;
+export default GraphQL;

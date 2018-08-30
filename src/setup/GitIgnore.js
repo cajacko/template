@@ -1,9 +1,9 @@
-const { RunnerTemplate } = require('@cajacko/template');
+import SetupTemplate from '../modules/SetupTemplate';
 
-class GitIgnore extends RunnerTemplate {
+class GitIgnore extends SetupTemplate {
   setupFiles() {
-    return this.runner.copy(this.getTmplPath('.gitignore'), '.gitignore');
+    return this.fs.copy('.gitignore');
   }
 }
 
-module.exports = GitIgnore;
+export default GitIgnore;
