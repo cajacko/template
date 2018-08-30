@@ -8,15 +8,13 @@ import upgrade from './commands/upgrade';
 import init from './commands/init';
 import test from './commands/test';
 import deploy from './commands/deploy';
+import start from './commands/start';
 
+registerCommand('start', start);
 registerCommand('init', init);
 registerCommand('test', test);
 registerCommand('deploy', deploy);
 registerCommand('upgrade', upgrade);
-
-registerCommand('start', () => {
-  console.log('START');
-});
 
 registerCommand(
   'postinstall',

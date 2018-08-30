@@ -1,10 +1,10 @@
-const { StartTemplate } = require('@cajacko/template');
-const {
-  copy, ensureDir, remove, readJSON, writeJSON,
-} = require('fs-extra');
-const { join } = require('path');
+// @flow
 
-class Website extends StartTemplate {
+import { copy, ensureDir, remove, readJSON, writeJSON } from 'fs-extra';
+import { join } from 'path';
+import Template from '../modules/Template';
+
+class MobileApp extends Template {
   constructor(...args) {
     super(...args);
 
@@ -28,7 +28,7 @@ class Website extends StartTemplate {
       this.fs.copyTmpl(
         join(__dirname, 'files/mobile/nativeConfig.js'),
         join(this.tmpDir, 'src/config.js'),
-        { entryPath }
+        { entryPath },
       ),
       this.copySrcDependencies(),
     ]);
@@ -51,7 +51,7 @@ class Website extends StartTemplate {
 
     return this.runCommand(
       `yarn build:lib --${buildTo}`,
-      join(__dirname, '../../')
+      join(__dirname, '../../'),
     );
   }
 
@@ -110,4 +110,4 @@ class Website extends StartTemplate {
   }
 }
 
-export default Website;
+export default MobileApp;
