@@ -3,10 +3,9 @@
 import { processCommands } from '@cajacko/template-utils';
 import registerCommand from '../utils/registerCommand';
 import upgrade from './upgrade';
+import init from './init';
 
-registerCommand('init', () => {
-  console.log('INIT');
-});
+registerCommand('init', init);
 
 registerCommand('start', () => {
   console.log('START');

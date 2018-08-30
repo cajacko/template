@@ -21,6 +21,8 @@
 // import JSDocs from './JSDocs';
 // import Example from './Example';
 
+const setupTemplates = {};
+
 // registerSetupTemplate('project', Project);
 // registerSetupTemplate('packagejson', PackageJSON);
 // registerSetupTemplate('git', Git);
@@ -40,3 +42,5 @@
 // registerSetupTemplate('changelog', Changelog);
 // registerSetupTemplate('jsdocs', JSDocs);
 // registerSetupTemplate('example', Example);
+
+export default setupTemplates;

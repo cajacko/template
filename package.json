@@ -6,7 +6,7 @@
     "template": "lib/bin.js"
   },
   "scripts": {
-    "build": "babel src --out-dir lib",
+    "build": "babel src --out-dir lib -s",
     "watch": "yarn build --watch",
     "prepare": "yarn build"
   },

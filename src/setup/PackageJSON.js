@@ -10,6 +10,7 @@ const projectJSON = {
   license: 'MIT',
   scripts: {
     start: 'template start',
+    init: 'template init',
     test: 'template test',
     deploy: 'template deploy',
     upgrade: 'template upgrade',
@@ -85,7 +86,7 @@ class PackageJSON extends RunnerTemplate {
 
     return this.runner.writeJSON(
       orderObj(this.packageJSON, packageJSONOrder, endPriority),
-      'package.json'
+      'package.json',
     );
   }
 }
