@@ -1,11 +1,11 @@
 // @flow
 
-import { getProjectDir } from '@cajacko/template-utils';
+import { getProjectDir, getProjectConfig } from '@cajacko/template-utils';
 import SetupRunner from '../modules/SetupRunner';
 
 const init = () =>
-  getProjectDir().then((projectDir) => {
-    const setupRunner = new SetupRunner(projectDir);
+  Promise.all([getProjectDir(), getProjectConfig()]).then(([projectDir, projectConfig]) => {
+    const setupRunner = new SetupRunner(projectDir, projectConfig);
 
     return setupRunner.runSteps();
   });

@@ -1,7 +1,9 @@
-const { RunnerTemplate } = require('@cajacko/template');
-const merge = require('lodash/merge');
-const { readJSON, pathExists } = require('fs-extra');
-const orderObj = require('../utils/orderObj');
+// @flow
+
+import { orderObj } from '@cajacko/template-utils';
+import merge from 'lodash/merge';
+import { readJSON, pathExists } from 'fs-extra';
+import SetupTemplate from '../modules/SetupTemplate';
 
 const projectJSON = {
   name: 'weewee',
@@ -30,7 +32,7 @@ const packageJSONOrder = [
 
 const endPriority = ['dependencies', 'devDependencies'];
 
-class PackageJSON extends RunnerTemplate {
+class PackageJSON extends SetupTemplate {
   constructor(...args) {
     super(...args);
 
@@ -38,7 +40,7 @@ class PackageJSON extends RunnerTemplate {
   }
 
   preRun() {
-    const path = this.getDestPath('package.json');
+    const path = this.fs.getDestPath('package.json');
 
     return pathExists(path)
       .then((exists) => {
@@ -56,13 +58,10 @@ class PackageJSON extends RunnerTemplate {
   }
 
   postSetupFiles() {
-    if (this.runner.projectConfig) {
+    if (this.projectConfig) {
       const {
-        slug,
-        description,
-        license,
-        templates,
-      } = this.runner.projectConfig;
+        slug, description, license, templates,
+      } = this.projectConfig;
       this.packageJSON.name = slug;
       this.packageJSON.description = description;
       this.packageJSON.license = license;
@@ -84,11 +83,11 @@ class PackageJSON extends RunnerTemplate {
       }
     }
 
-    return this.runner.writeJSON(
+    return this.fs.writeJSON(
       orderObj(this.packageJSON, packageJSONOrder, endPriority),
       'package.json',
     );
   }
 }
 
-module.exports = PackageJSON;
+export default PackageJSON;

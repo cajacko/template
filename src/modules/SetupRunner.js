@@ -9,7 +9,7 @@ import { join } from 'path';
 import setupTemplates from '../setup';
 
 class SetupRunner extends StepRunner {
-  constructor(destPath) {
+  constructor(destPath, projectConfig) {
     const steps = [
       'preRun',
       'preSetupFiles',
@@ -25,6 +25,8 @@ class SetupRunner extends StepRunner {
     ];
 
     super(steps);
+
+    this.projectConfig = projectConfig;
 
     this.npm = new QueuedNPMManager();
     this.fs = new QueuedFileManagement();
@@ -44,7 +46,9 @@ class SetupRunner extends StepRunner {
   init() {
     Object.keys(setupTemplates).forEach((setupTemplateKey) => {
       const SetupTemplate = setupTemplates[setupTemplateKey];
-      const setupTemplate = new SetupTemplate(this);
+      const setupTemplate = new SetupTemplate(this, {
+        projectConfig: this.projectConfig,
+      });
 
       this.addAllMatchingMethodsToSteps(setupTemplate);
 

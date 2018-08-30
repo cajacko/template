@@ -1,7 +1,5 @@
 // @flow
 
-import { join } from 'path';
-
 class SetupTemplate {
   constructor(runner, options) {
     this.fs = runner.fs;
@@ -16,10 +14,6 @@ class SetupTemplate {
     this.runner = runner;
 
     if (this.init) this.init();
-  }
-
-  getTmplPath(path) {
-    return join(__dirname, '../files', path);
   }
 }
 

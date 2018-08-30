@@ -10,7 +10,7 @@ import {
 } from '@cajacko/template-utils';
 import isProjectDirLinked from './isProjectDirLinked';
 import { NPM_NAMESPACE, SKIP_OPTION } from '../config/general';
-import buildLibIfEnabled from './buildLibIfEnabled';
+import buildLib from './buildLib';
 import unlinkLibs from './unlinkLibs';
 
 const registerCommand = (command, callback, configArg) => {
@@ -40,11 +40,11 @@ const registerCommand = (command, callback, configArg) => {
 
           if (env.USE_LOCAL_LIBS || env.NO_ENV_FILE) {
             if (isLinked === true) {
-              return buildLibIfEnabled(env).then(runAndSkip);
+              return buildLib(env.NO_ENV_FILE).then(runAndSkip);
             }
 
             return linkAllNameSpacedDependencies(NPM_NAMESPACE, projectDir)
-              .then(() => buildLibIfEnabled(env))
+              .then(() => buildLib())
               .then(runAndSkip);
           }
 

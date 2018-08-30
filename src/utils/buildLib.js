@@ -7,9 +7,7 @@ import {
 } from '@cajacko/template-utils';
 import { NPM_NAMESPACE } from '../config/general';
 
-const buildLibIfEnabled = ({ USE_LOCAL_LIBS }) => {
-  if (!USE_LOCAL_LIBS) return Promise.resolve();
-
+const buildLib = (useFromSettings) => {
   logger.debug('Using local libs');
   logger.debug('- Building local libs');
   return getProjectDir()
@@ -19,10 +17,11 @@ const buildLibIfEnabled = ({ USE_LOCAL_LIBS }) => {
         projectDir,
         'yarn build',
         { noLog: true },
+        useFromSettings,
       ))
     .then(() => {
       logger.debug('- Finished building local libs');
     });
 };
 
-export default buildLibIfEnabled;
+export default buildLib;
