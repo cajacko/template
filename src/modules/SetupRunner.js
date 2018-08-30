@@ -28,11 +28,12 @@ class SetupRunner extends StepRunner {
 
     this.projectConfig = projectConfig;
 
-    this.npm = new QueuedNPMManager();
-    this.fs = new QueuedFileManagement();
+    this.npm = new QueuedNPMManager(destPath);
 
-    this.fs.setTmplPath(join(__dirname, '../../files'));
-    this.fs.setDestPath(destPath);
+    this.fs = new QueuedFileManagement(
+      join(__dirname, '../../files'),
+      destPath,
+    );
 
     this.addInitialSteps();
     this.init();

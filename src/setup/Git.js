@@ -1,11 +1,11 @@
-const { RunnerTemplate } = require('@cajacko/template');
+import SetupTemplate from '../modules/SetupTemplate';
 
-class Git extends RunnerTemplate {
+class Git extends SetupTemplate {
   setupFiles() {
-    this.runner.addNodeModules({
+    this.npm.add({
       husky: { type: 'dev', version: '0.14.3' },
     });
   }
 }
 
-module.exports = Git;
+export default Git;

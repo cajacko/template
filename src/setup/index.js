@@ -2,7 +2,7 @@
 
 // import { registerSetupTemplate } from '@cajacko/template-utils';
 import PackageJSON from './PackageJSON';
-// import Git from './Git';
+import Git from './Git';
 // import Eslint from './Eslint';
 // import Env from './Env';
 // import Flow from './Flow';
@@ -21,7 +21,7 @@ import Changelog from './Changelog';
 
 const setupTemplates = {
   packagejson: PackageJSON,
-  // git: Git,
+  git: Git,
   // eslint: Eslint,
   // env: Env,
   // flow: Flow,
