@@ -3,8 +3,10 @@
 import templates from '../templates';
 
 class TemplateRunner {
-  constructor(commander, projectConfig) {
+  constructor(commander, projectConfig, env, projectDir) {
     this.projectConfig = projectConfig;
+    this.env = env;
+    this.projectDir = projectDir;
   }
 
   getTemplatesAndRunCommandInEach(command) {
@@ -18,11 +20,22 @@ class TemplateRunner {
     templateKeys.forEach((templateKey) => {
       const templateConfig = this.projectConfig.templates[templateKey];
 
+      templateConfig.key = templateKey;
+
       const Template = templates[templateConfig.type];
 
-      const template = new Template();
+      if (!Template) {
+        throw new Error(`No template is available for "${templateConfig.type}"`);
+      }
 
-      promises.push(template[command]());
+      const template = new Template(
+        templateConfig,
+        this.projectConfig,
+        this.env,
+        this.projectDir,
+      );
+
+      if (template[command]) promises.push(template[command]());
     });
 
     return Promise.all(promises);
