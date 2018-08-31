@@ -42,19 +42,28 @@ const upgrade = () =>
   Promise.all([getSettings(['localNPMPackagePaths']), getProjectDir()]).then(([localNPMPackagePaths, projectDir]) => {
     const templateUtilsDir = localNPMPackagePaths['@cajacko/template-utils'];
     const templateDir = localNPMPackagePaths['@cajacko/template'];
+    const libDir = localNPMPackagePaths['@cajacko/lib'];
 
     return updatePackage(
       templateUtilsDir,
       'https://github.com/cajacko/template-utils.git',
       'template-utils',
       templateDir,
-    ).then(() =>
-      updatePackage(
-        templateDir,
-        'https://github.com/cajacko/template.git',
-        'template',
-        projectDir,
-      ));
+    )
+      .then(() =>
+        updatePackage(
+          libDir,
+          'https://github.com/cajacko/lib.git',
+          'lib',
+          projectDir,
+        ))
+      .then(() =>
+        updatePackage(
+          templateDir,
+          'https://github.com/cajacko/template.git',
+          'template',
+          projectDir,
+        ));
   });
 
 export default upgrade;
