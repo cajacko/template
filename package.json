@@ -1,6 +1,6 @@
 {
   "name": "@cajacko/template",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "description": "Templating engine for projects by Charlie Jackson",
   "bin": {
     "template": "lib/bin.js"
