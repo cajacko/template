@@ -92,9 +92,9 @@
     lodash "^4.17.5"
     to-fast-properties "^2.0.0"
 
-"@cajacko/template-utils@https://github.com/cajacko/template-utils.git#v0.2.0":
-  version "0.2.0"
-  resolved "https://github.com/cajacko/template-utils.git#b2be98ccd1e933a84efb1a54107d04cba9a60be8"
+"@cajacko/template-utils@https://github.com/cajacko/template-utils.git#v0.2.1":
+  version "0.2.1"
+  resolved "https://github.com/cajacko/template-utils.git#13d7bcb0145d1c7399fb78bcbfc4626ba0cdb520"
   dependencies:
     commander "^2.17.1"
     ejs "^2.6.1"
@@ -106,9 +106,9 @@
     semver "^5.5.1"
     simple-git "^1.96.0"
 
-"@cajacko/template-utils@https://github.com/cajacko/template-utils.git#v0.2.1":
-  version "0.2.1"
-  resolved "https://github.com/cajacko/template-utils.git#13d7bcb0145d1c7399fb78bcbfc4626ba0cdb520"
+"@cajacko/template-utils@https://github.com/cajacko/template-utils.git#v0.2.2":
+  version "0.2.2"
+  resolved "https://github.com/cajacko/template-utils.git#865556a0bfed8cb60f04eb461940d62e5460318e"
   dependencies:
     commander "^2.17.1"
     ejs "^2.6.1"
