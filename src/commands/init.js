@@ -1,16 +1,25 @@
 // @flow
 
-import { getProjectDir, getProjectConfig, git } from '@cajacko/template-utils';
-import { join } from 'path';
+import {
+  getProjectDir,
+  getProjectConfig,
+  getLastLocalModuleVersion,
+} from '@cajacko/template-utils';
 import SetupRunner from '../modules/SetupRunner';
 
 const init = () =>
   Promise.all([
     getProjectDir(),
     getProjectConfig(),
-    git.getLastVersionTag(join(__dirname, '../../')),
-  ]).then(([projectDir, projectConfig, lastVersion]) => {
-    const setupRunner = new SetupRunner(projectDir, projectConfig, lastVersion);
+    getLastLocalModuleVersion('@cajacko/template'),
+    getLastLocalModuleVersion('@cajacko/lib'),
+  ]).then(([projectDir, projectConfig, lastTemplateVersion, lastLibVersion]) => {
+    const setupRunner = new SetupRunner(
+      projectDir,
+      projectConfig,
+      lastTemplateVersion,
+      lastLibVersion,
+    );
 
     return setupRunner.runSteps();
   });
