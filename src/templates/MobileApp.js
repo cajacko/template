@@ -1,7 +1,7 @@
 // @flow
 
 import { join } from 'path';
-import { ensureDir, copy } from 'fs-extra';
+import { ensureDir, copy, readJSON, writeJSON } from 'fs-extra';
 import {
   getSettings,
   runCommand,
@@ -21,6 +21,22 @@ class MobileApp extends Template {
     this.libOutDir = join(this.tmpDir, 'node_modules/@cajacko/lib');
 
     registerLibOutDir(this.libOutDir);
+  }
+
+  setSplashIcon() {
+    const splashIconPath = this.templateConfig.splashIcon;
+
+    if (!splashIconPath) return Promise.resolve();
+
+    const appJSONPath = join(this.tmpDir, 'app.json');
+
+    return readJSON(appJSONPath).then((contents) => {
+      const appJSON = Object.assign({}, contents);
+
+      appJSON.expo.splash.image = `./${splashIconPath}`;
+
+      return writeJSON(appJSONPath, appJSON, { spaces: 2 });
+    });
   }
 
   start() {
@@ -48,8 +64,13 @@ class MobileApp extends Template {
               join(this.tmpDir, 'config.js'),
               this.templateConfig,
             ),
+            this.setSplashIcon(),
           ]))
-        .then(() => runCommand('yarn start', this.tmpDir));
+        .then(() => runCommand('yarn start', this.tmpDir))
+        .catch((e) => {
+          console.error(e);
+          process.exit(1);
+        });
     });
   }
 }
