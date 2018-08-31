@@ -48,7 +48,7 @@
     "prettier-eslint-cli": "^4.7.1"
   },
   "dependencies": {
-    "@cajacko/template-utils": "https://github.com/cajacko/template-utils.git#v0.2.0",
+    "@cajacko/template-utils": "https://github.com/cajacko/template-utils.git#v0.2.1",
     "commander": "^2.16.0",
     "ejs": "^2.6.1",
     "fs-extra": "^6.0.1",
