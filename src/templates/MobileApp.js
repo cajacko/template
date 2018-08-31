@@ -3,7 +3,6 @@
 import { join } from 'path';
 import { ensureDir, copy } from 'fs-extra';
 import {
-  fs,
   runCommand,
   copyTmpl,
   copyDependencies,
@@ -32,8 +31,8 @@ class MobileApp extends Template {
         }))
       .then(() =>
         Promise.all([
-          this.installDependencies(),
-          setOutDirIsReady(this.libOutDir),
+          this.installDependencies().then(() =>
+            setOutDirIsReady(this.libOutDir)),
           copyAndWatch(this.projectSrcDir, join(this.tmpDir, 'src')),
           copyTmpl(
             join(this.tmplDir, 'config.js'),

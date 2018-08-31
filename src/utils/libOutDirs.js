@@ -1,12 +1,26 @@
 // @flow
 
+import { getSettings, runCommand } from '@cajacko/template-utils';
+
 let resolvePromise;
 
 const libOutDirs = {};
 
-const watchLib = () => {
-  resolvePromise();
-};
+const watchLib = () =>
+  getSettings('localNPMPackagePaths')
+    .then((localNPMPackagePaths) => {
+      const libPath = localNPMPackagePaths['@cajacko/lib'];
+
+      const outDirOptions = Object.keys(libOutDirs).reduce(
+        (acc, val) => `${acc} --${val}`,
+        '',
+      );
+
+      return runCommand(`yarn build:lib ${outDirOptions}`, libPath).then(() => {
+        runCommand(`yarn watch:lib ${outDirOptions}`, libPath);
+      });
+    })
+    .then(resolvePromise);
 
 export const isWatching = new Promise((resolve) => {
   resolvePromise = resolve;
