@@ -3,6 +3,7 @@
 import { join } from 'path';
 import { ensureDir, copy } from 'fs-extra';
 import {
+  getSettings,
   runCommand,
   copyTmpl,
   copyDependencies,
@@ -23,24 +24,32 @@ class MobileApp extends Template {
   }
 
   start() {
-    return ensureDir(this.tmpDir)
-      .then(() => copy(this.tmplSrcDir, this.tmpDir))
-      .then(() =>
-        copyDependencies(this.projectDir, this.tmpDir, {
-          ignore: ['@cajacko/template'],
-        }))
-      .then(() =>
-        Promise.all([
-          this.installDependencies().then(() =>
-            setOutDirIsReady(this.libOutDir)),
-          copyAndWatch(this.projectSrcDir, join(this.tmpDir, 'src')),
-          copyTmpl(
-            join(this.tmplDir, 'config.js'),
-            join(this.tmpDir, 'config.js'),
-            this.templateConfig,
-          ),
-        ]))
-      .then(() => runCommand('yarn start', this.tmpDir));
+    return getSettings('localNPMPackagePaths').then((localNPMPackagePaths) => {
+      const localLibPath = localNPMPackagePaths['@cajacko/lib'];
+
+      return ensureDir(this.tmpDir)
+        .then(() => copy(this.tmplSrcDir, this.tmpDir))
+        .then(() =>
+          copyDependencies(this.projectDir, this.tmpDir, {
+            ignore: ['@cajacko/template'],
+          }))
+        .then(() =>
+          copyDependencies(localLibPath, this.tmpDir, {
+            ignore: ['@cajacko/template'],
+          }))
+        .then(() =>
+          Promise.all([
+            this.installDependencies().then(() =>
+              setOutDirIsReady(this.libOutDir)),
+            copyAndWatch(this.projectSrcDir, join(this.tmpDir, 'src')),
+            copyTmpl(
+              join(this.tmplDir, 'config.js'),
+              join(this.tmpDir, 'config.js'),
+              this.templateConfig,
+            ),
+          ]))
+        .then(() => runCommand('yarn start', this.tmpDir));
+    });
   }
 }
 
