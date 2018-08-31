@@ -30,19 +30,18 @@ class MobileApp extends Template {
         copyDependencies(this.projectDir, this.tmpDir, {
           ignore: ['@cajacko/template'],
         }))
-      .then(() => copyDependencies(this.libDir, this.tmpDir));
-    // .then(() =>
-    //   Promise.all([
-    //     this.installDependencies(),
-    //     setOutDirIsReady(this.libOutDir),
-    //     copyAndWatch(this.projectSrcDir, join(this.tmpDir, 'src')),
-    //     copyTmpl(
-    //       join(this.tmplDir, 'config.js'),
-    //       join(this.tmpDir, 'config.js'),
-    //       this.templateConfig,
-    //     ),
-    //   ]))
-    // .then(() => runCommand('yarn start', this.tmpDir));
+      .then(() =>
+        Promise.all([
+          this.installDependencies(),
+          setOutDirIsReady(this.libOutDir),
+          copyAndWatch(this.projectSrcDir, join(this.tmpDir, 'src')),
+          copyTmpl(
+            join(this.tmplDir, 'config.js'),
+            join(this.tmpDir, 'config.js'),
+            this.templateConfig,
+          ),
+        ]))
+      .then(() => runCommand('yarn start', this.tmpDir));
   }
 }
 

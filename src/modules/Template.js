@@ -12,7 +12,7 @@ class Template {
     this.filesDir = join(__dirname, '../../files');
     this.tmpDir = join(projectDir, 'tmp', templateConfig.key);
     this.projectSrcDir = join(projectDir, 'src');
-    this.libDir = join(__dirname, '../../node_modules/@cajacko/lib');
+    this.libDir = join(projectDir, 'node_modules/@cajacko/lib');
   }
 
   installDependencies(dir) {
