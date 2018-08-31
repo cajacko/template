@@ -24,19 +24,20 @@ class MobileApp extends Template {
   }
 
   start() {
-    return getSettings('localNPMPackagePaths').then((localNPMPackagePaths) => {
-      const localLibPath = localNPMPackagePaths['@cajacko/lib'];
-
-      return ensureDir(this.tmpDir)
+    Promise.all([
+      getSettings('localNPMPackagePaths'),
+      ensureDir(this.tmpDir)
         .then(() => copy(this.tmplSrcDir, this.tmpDir))
         .then(() =>
           copyDependencies(this.projectDir, this.tmpDir, {
             ignore: ['@cajacko/template'],
-          }))
-        .then(() =>
-          copyDependencies(localLibPath, this.tmpDir, {
-            ignore: ['@cajacko/template'],
-          }))
+          })),
+    ]).then(([localNPMPackagePaths]) => {
+      const localLibPath = localNPMPackagePaths['@cajacko/lib'];
+
+      copyDependencies(localLibPath, this.tmpDir, {
+        ignore: ['@cajacko/template'],
+      })
         .then(() =>
           Promise.all([
             this.installDependencies().then(() =>
