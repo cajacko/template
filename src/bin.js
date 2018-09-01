@@ -2,6 +2,7 @@
 
 // @flow
 
+import '@babel/polyfill';
 import { processCommands } from '@cajacko/template-utils';
 import registerCommand from './utils/registerCommand';
 import upgrade from './commands/upgrade';

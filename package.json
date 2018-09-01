@@ -48,6 +48,7 @@
     "prettier-eslint-cli": "^4.7.1"
   },
   "dependencies": {
+    "@babel/polyfill": "^7.0.0",
     "@cajacko/template-utils": "https://github.com/cajacko/template-utils.git#v0.2.3",
     "commander": "^2.16.0",
     "ejs": "^2.6.1",
