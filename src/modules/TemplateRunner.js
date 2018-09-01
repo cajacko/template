@@ -1,5 +1,6 @@
 // @flow
 
+import { ask } from '@cajacko/template-utils';
 import templates from '../templates';
 
 class TemplateRunner {
@@ -7,6 +8,7 @@ class TemplateRunner {
     this.projectConfig = projectConfig;
     this.env = env;
     this.projectDir = projectDir;
+    this.commander = commander;
   }
 
   getTemplatesAndRunCommandInEach(command) {
@@ -46,7 +48,16 @@ class TemplateRunner {
   }
 
   getTemplatesToRun() {
-    return Promise.resolve(Object.keys(this.projectConfig.templates));
+    const templateKeys = Object.keys(this.projectConfig.templates);
+
+    if (!this.commander.interactive) {
+      return Promise.resolve(templateKeys);
+    }
+
+    return ask({
+      type: 'checkbox',
+      choices: templateKeys,
+    });
   }
 }
 

@@ -10,22 +10,15 @@ import test from './commands/test';
 import deploy from './commands/deploy';
 import start from './commands/start';
 
-registerCommand('start', start);
+registerCommand('start', start, { options: [['-i, --interactive']] });
+
 registerCommand('init', init);
 registerCommand('test', test);
 registerCommand('deploy', deploy);
 registerCommand('upgrade', upgrade);
 
-registerCommand(
-  'postinstall',
-  () => {
-    console.log('POSTINSTALL');
-  },
-  { ignoreUnlink: true },
-);
+registerCommand('postinstall', () => {}, { ignoreUnlink: true });
 
-registerCommand('precommit', () => {
-  console.log('PRECOMMIT');
-});
+registerCommand('precommit', () => {});
 
 processCommands(process.argv);
