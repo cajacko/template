@@ -39,7 +39,7 @@ class MobileApp extends Template {
   }
 
   start() {
-    Promise.all([
+    return Promise.all([
       this.getActiveLibDir(),
       ensureDir(this.tmpDir)
         .then(() => copy(this.tmplSrcDir, this.tmpDir))

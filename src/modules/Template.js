@@ -13,6 +13,8 @@ class Template {
     this.tmpDir = join(projectDir, 'tmp', templateConfig.key);
     this.projectSrcDir = join(projectDir, 'src');
     this.libDir = join(projectDir, 'node_modules/@cajacko/lib');
+
+    this.installDependencies = this.installDependencies.bind(this);
   }
 
   installDependencies(dir) {
