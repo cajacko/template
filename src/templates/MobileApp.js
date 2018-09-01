@@ -3,7 +3,6 @@
 import { join } from 'path';
 import { ensureDir, copy, readJSON, writeJSON } from 'fs-extra';
 import {
-  getSettings,
   runCommand,
   copyTmpl,
   copyDependencies,
@@ -20,7 +19,7 @@ class MobileApp extends Template {
     this.tmplSrcDir = join(this.tmplDir, 'src');
     this.libOutDir = join(this.tmpDir, 'node_modules/@cajacko/lib');
 
-    registerLibOutDir(this.libOutDir);
+    this.runIfUseLocal(() => registerLibOutDir(this.libOutDir));
   }
 
   setSplashIcon() {
@@ -41,23 +40,21 @@ class MobileApp extends Template {
 
   start() {
     Promise.all([
-      getSettings('localNPMPackagePaths'),
+      this.getActiveLibDir(),
       ensureDir(this.tmpDir)
         .then(() => copy(this.tmplSrcDir, this.tmpDir))
         .then(() =>
           copyDependencies(this.projectDir, this.tmpDir, {
             ignore: ['@cajacko/template'],
           })),
-    ]).then(([localNPMPackagePaths]) => {
-      const localLibPath = localNPMPackagePaths['@cajacko/lib'];
-
+    ]).then(([localLibPath]) =>
       copyDependencies(localLibPath, this.tmpDir, {
         ignore: ['@cajacko/template'],
       })
         .then(() =>
           Promise.all([
             this.installDependencies().then(() =>
-              setOutDirIsReady(this.libOutDir)),
+              this.runIfUseLocal(() => setOutDirIsReady(this.libOutDir))),
             copyAndWatch(this.projectSrcDir, join(this.tmpDir, 'src')),
             copyTmpl(
               join(this.tmplDir, 'config.js'),
@@ -70,8 +67,7 @@ class MobileApp extends Template {
         .catch((e) => {
           console.error(e);
           process.exit(1);
-        });
-    });
+        }));
   }
 }
 

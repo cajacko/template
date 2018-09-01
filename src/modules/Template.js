@@ -1,7 +1,7 @@
 // @flow
 
 import { join } from 'path';
-import { runCommand } from '@cajacko/template-utils';
+import { runCommand, getSettings } from '@cajacko/template-utils';
 
 class Template {
   constructor(templateConfig, projectConfig, env, projectDir) {
@@ -17,6 +17,18 @@ class Template {
 
   installDependencies(dir) {
     return runCommand('yarn install', dir || this.tmpDir);
+  }
+
+  runIfUseLocal(cb) {
+    if (!this.env.USE_LOCAL_LIBS) return Promise.resolve();
+
+    return cb();
+  }
+
+  getActiveLibDir() {
+    if (!this.env.USE_LOCAL_LIBS) return Promise.resolve(this.libDir);
+
+    return getSettings('localNPMPackagePaths').then(localNPMPackagePaths => localNPMPackagePaths['@cajacko/lib']);
   }
 }
 
