@@ -10,7 +10,9 @@ import test from './commands/test';
 import deploy from './commands/deploy';
 import start from './commands/start';
 
-registerCommand('start', start, { options: [['-i, --interactive']] });
+registerCommand('start', start, {
+  options: [['-i, --interactive'], ['-t, --template [type]']],
+});
 
 registerCommand('init', init);
 registerCommand('test', test);

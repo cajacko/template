@@ -48,6 +48,10 @@ class TemplateRunner {
   }
 
   getTemplatesToRun() {
+    const { template } = this.commander;
+
+    if (template) return Promise.resolve([template]);
+
     const templateKeys = Object.keys(this.projectConfig.templates);
 
     if (!this.commander.interactive) {
