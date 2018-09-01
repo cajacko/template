@@ -1,4 +1,4 @@
-const functions = require('firebase-functions');
-const graphql = require('./src');
+const entry = require('@cajacko/lib/entry/graphql');
+const config = require('./config');
 
-exports.graphql = functions.https.onRequest(graphql);
+exports.graphql = entry(config);

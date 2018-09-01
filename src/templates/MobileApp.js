@@ -6,10 +6,10 @@ import {
   runCommand,
   copyTmpl,
   copyDependencies,
-  copyAndWatch,
 } from '@cajacko/template-utils';
 import Template from '../modules/Template';
 import { registerLibOutDir, setOutDirIsReady } from '../utils/libOutDirs';
+import copyAndWatch from '../utils/copyAndWatch';
 
 class MobileApp extends Template {
   constructor(...args) {

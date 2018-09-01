@@ -1,6 +1,5 @@
 // @flow
 
-import * as config from './projectFiles/<%= entryPath %>';
+const config = require('./<%= entryFile %>');
 
-export default config;
-export * from './projectFiles/<%= entryPath %>';
+module.exports = config;
