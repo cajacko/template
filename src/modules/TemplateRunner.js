@@ -33,6 +33,7 @@ class TemplateRunner {
       const template = new Template(
         templateConfig,
         this.projectConfig,
+        this.commander,
         this.env,
         this.projectDir,
       );

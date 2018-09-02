@@ -4,7 +4,8 @@ import { join } from 'path';
 import { runCommand, getSettings } from '@cajacko/template-utils';
 
 class Template {
-  constructor(templateConfig, projectConfig, env, projectDir) {
+  constructor(templateConfig, projectConfig, commander, env, projectDir) {
+    this.commander = commander;
     this.templateConfig = templateConfig;
     this.projectConfig = projectConfig;
     this.env = env;
@@ -18,6 +19,7 @@ class Template {
   }
 
   installDependencies(dir) {
+    if (this.commander.offline) return Promise.resolve();
     return runCommand('yarn install', dir || this.tmpDir);
   }
 

@@ -12,7 +12,11 @@ import deploy from './commands/deploy';
 import start from './commands/start';
 
 registerCommand('start', start, {
-  options: [['-i, --interactive'], ['-t, --template [type]']],
+  options: [
+    ['-i, --interactive'],
+    ['-t, --template [type]'],
+    ['-o, --offline'],
+  ],
 });
 
 registerCommand('init', init);
