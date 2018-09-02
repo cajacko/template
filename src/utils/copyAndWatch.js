@@ -14,7 +14,7 @@ const copyAndWatch = (src, dest, optionsArg = {}) => {
     const path = join(__dirname, '../../');
 
     return runCommand(command, path).then(() => {
-      runCommand(`${command} --watch`, path);
+      runCommand(`${command} --watch --skip-initial-build`, path);
     });
   }
 
