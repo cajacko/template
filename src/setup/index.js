@@ -17,6 +17,7 @@ import GitAttributes from './GitAttributes';
 import Changelog from './Changelog';
 import JSDocs from './JSDocs';
 import Example from './Example';
+import Babel from './Babel';
 
 const setupTemplates = {
   packagejson: PackageJSON,
@@ -36,6 +37,7 @@ const setupTemplates = {
   changelog: Changelog,
   jsdocs: JSDocs,
   example: Example,
+  babel: Babel,
 };
 
 export default setupTemplates;

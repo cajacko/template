@@ -1,7 +1,7 @@
 // @flow
 
 import { join } from 'path';
-import { ensureDir, copy, readJSON, writeJSON } from 'fs-extra';
+import { ensureDir, copy } from 'fs-extra';
 import {
   runCommand,
   copyTmpl,

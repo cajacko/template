@@ -1,6 +1,6 @@
 {
-  presets: ["react", "env", "flow"],
-  plugins: [
+  "presets": ["react", "env", "flow"],
+  "plugins": [
     "transform-react-jsx-source",
     "transform-object-rest-spread",
     "babel-plugin-styled-components"
