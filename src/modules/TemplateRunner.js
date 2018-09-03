@@ -1,6 +1,8 @@
 // @flow
 
 import { ask } from '@cajacko/template-utils';
+import { join } from 'path';
+import { remove } from 'fs-extra';
 import templates from '../templates';
 
 class TemplateRunner {
@@ -44,7 +46,16 @@ class TemplateRunner {
     return Promise.all(promises);
   }
 
+  reset() {
+    return remove(join(this.projectDir, 'tmp'));
+  }
+
   start() {
+    if (this.commander.reset) {
+      return this.reset().then(() =>
+        this.getTemplatesAndRunCommandInEach('start'));
+    }
+
     return this.getTemplatesAndRunCommandInEach('start');
   }
 

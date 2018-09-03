@@ -16,6 +16,7 @@ registerCommand('start', start, {
     ['-i, --interactive'],
     ['-t, --template [type]'],
     ['-o, --offline'],
+    ['-r, --reset'],
   ],
 });
 
