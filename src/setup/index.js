@@ -18,6 +18,7 @@ import Changelog from './Changelog';
 import JSDocs from './JSDocs';
 import Example from './Example';
 import Babel from './Babel';
+import NVM from './NVM';
 
 const setupTemplates = {
   packagejson: PackageJSON,
@@ -38,6 +39,7 @@ const setupTemplates = {
   jsdocs: JSDocs,
   example: Example,
   babel: Babel,
+  nvm: NVM,
 };
 
 export default setupTemplates;
