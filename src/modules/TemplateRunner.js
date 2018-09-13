@@ -41,7 +41,19 @@ class TemplateRunner {
         command,
       );
 
-      if (template[command]) promises.push(template[command]());
+      if (template[command]) {
+        let promise = Promise.resolve();
+
+        if (template.init) {
+          promise = promise.then(() => template.init());
+        }
+
+        promise = promise.then(() => template[command]());
+
+        promises.push(promise);
+      } else if (template.noCommand) {
+        promises.push(template.noCommand());
+      }
     });
 
     return Promise.all(promises);
@@ -83,10 +95,12 @@ class TemplateRunner {
       type: 'checkbox',
       choices: templateKeys,
       validate: (answers) => {
-        if (answers.length < 1) return 'You must select at least 1 template, use the spacebar to select';
+        if (answers.length < 1) {
+          return 'You must select at least 1 template, use the spacebar to select';
+        }
 
         return true;
-      }
+      },
     });
   }
 }

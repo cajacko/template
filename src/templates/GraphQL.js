@@ -8,7 +8,11 @@ import {
   copyDependencies,
 } from '@cajacko/template-utils';
 import Template from '../modules/Template';
-import { registerLibOutDir, setOutDirIsReady } from '../utils/libOutDirs';
+import {
+  registerLibOutDir,
+  setOutDirIsReady,
+  unregisterLibOutDir,
+} from '../utils/libOutDirs';
 import copyAndWatch from '../utils/copyAndWatch';
 
 class GraphQL extends Template {
@@ -19,7 +23,9 @@ class GraphQL extends Template {
     this.tmplSrcDir = join(this.tmplDir, 'src');
     this.tmpFuncDir = join(this.tmpDir, 'functions');
     this.libOutDir = join(this.tmpFuncDir, 'node_modules/@cajacko/lib');
+  }
 
+  init() {
     this.runIfUseLocal(() =>
       registerLibOutDir(this.libOutDir, this.shouldWatch));
   }
@@ -47,6 +53,10 @@ class GraphQL extends Template {
           ),
         ]))
       .then(() => runCommand('yarn start', this.tmpDir));
+  }
+
+  onFinish() {
+    this.runIfUseLocal(() => unregisterLibOutDir(this.libOutDir));
   }
 }
 

@@ -18,7 +18,9 @@ class MobileApp extends Template {
     this.tmplDir = join(this.filesDir, 'mobile');
     this.tmplSrcDir = join(this.tmplDir, 'src');
     this.libOutDir = join(this.tmpDir, 'node_modules/@cajacko/lib');
+  }
 
+  init() {
     this.runIfUseLocal(() =>
       registerLibOutDir(this.libOutDir, this.shouldWatch));
   }
@@ -67,13 +69,8 @@ class MobileApp extends Template {
         ignore: ['@cajacko/template'],
       }).then(() =>
         Promise.all([
-          this.installDependencies().then(() => {
-            if (this.shouldWatch) {
-              return this.runIfUseLocal(() => setOutDirIsReady(this.libOutDir));
-            }
-
-            return Promise.resolve();
-          }),
+          this.installDependencies().then(() =>
+            this.runIfUseLocal(() => setOutDirIsReady(this.libOutDir))),
           this.copyOrWatchSrc(),
           copyTmpl(
             join(this.tmplDir, 'config.js'),
