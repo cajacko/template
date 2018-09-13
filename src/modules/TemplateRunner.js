@@ -38,6 +38,7 @@ class TemplateRunner {
         this.commander,
         this.env,
         this.projectDir,
+        command,
       );
 
       if (template[command]) promises.push(template[command]());
@@ -50,13 +51,21 @@ class TemplateRunner {
     return remove(join(this.projectDir, 'tmp'));
   }
 
-  start() {
+  conditionalResetAndRun(command) {
     if (this.commander.reset) {
       return this.reset().then(() =>
-        this.getTemplatesAndRunCommandInEach('start'));
+        this.getTemplatesAndRunCommandInEach(command));
     }
 
-    return this.getTemplatesAndRunCommandInEach('start');
+    return this.getTemplatesAndRunCommandInEach(command);
+  }
+
+  deploy() {
+    return this.conditionalResetAndRun('deploy');
+  }
+
+  start() {
+    return this.conditionalResetAndRun('start');
   }
 
   getTemplatesToRun() {

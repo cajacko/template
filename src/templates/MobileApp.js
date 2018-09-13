@@ -18,12 +18,17 @@ class MobileApp extends Template {
     this.tmplDir = join(this.filesDir, 'mobile');
     this.tmplSrcDir = join(this.tmplDir, 'src');
     this.libOutDir = join(this.tmpDir, 'node_modules/@cajacko/lib');
+    this.shouldWatch = this.command === 'start';
 
-    this.runIfUseLocal(() => registerLibOutDir(this.libOutDir));
+    if (this.shouldWatch) {
+      this.runIfUseLocal(() => registerLibOutDir(this.libOutDir));
+    }
   }
 
-  setSplashIcon() {
+  setAppJSON() {
     const splashIconPath = this.templateConfig.splashIcon;
+    const expoName = this.templateConfig.name || this.projectConfig.title;
+    const expoSlug = this.templateConfig.slug || this.projectConfig.slug;
 
     if (!splashIconPath) return Promise.resolve();
 
@@ -33,12 +38,24 @@ class MobileApp extends Template {
       const appJSON = Object.assign({}, contents);
 
       appJSON.expo.splash.image = `./${splashIconPath}`;
+      appJSON.expo.name = expoName;
+      appJSON.expo.slug = expoSlug;
 
       return writeJSON(appJSONPath, appJSON, { spaces: 2 });
     });
   }
 
-  start() {
+  copyOrWatchSrc() {
+    const tmpSrc = join(this.tmpDir, 'src');
+
+    if (this.shouldWatch) {
+      return copyAndWatch(this.projectSrcDir, tmpSrc);
+    }
+
+    return copy(this.projectSrcDir, tmpSrc);
+  }
+
+  prepare() {
     return Promise.all([
       this.getActiveLibDir(),
       ensureDir(this.tmpDir)
@@ -50,24 +67,35 @@ class MobileApp extends Template {
     ]).then(([localLibPath]) =>
       copyDependencies(localLibPath, this.tmpDir, {
         ignore: ['@cajacko/template'],
-      })
-        .then(() =>
-          Promise.all([
-            this.installDependencies().then(() =>
-              this.runIfUseLocal(() => setOutDirIsReady(this.libOutDir))),
-            copyAndWatch(this.projectSrcDir, join(this.tmpDir, 'src')),
-            copyTmpl(
-              join(this.tmplDir, 'config.js'),
-              join(this.tmpDir, 'config.js'),
-              this.templateConfig,
-            ),
-            this.setSplashIcon(),
-          ]))
-        .then(() => runCommand('yarn start', this.tmpDir))
-        .catch((e) => {
-          console.error(e);
-          process.exit(1);
-        }));
+      }).then(() =>
+        Promise.all([
+          this.installDependencies().then(() => {
+            if (this.shouldWatch) {
+              return this.runIfUseLocal(() => setOutDirIsReady(this.libOutDir));
+            }
+
+            return Promise.resolve();
+          }),
+          this.copyOrWatchSrc(),
+          copyTmpl(
+            join(this.tmplDir, 'config.js'),
+            join(this.tmpDir, 'config.js'),
+            this.templateConfig,
+          ),
+          this.setAppJSON(),
+        ])));
+  }
+
+  prepareAndRun(command) {
+    return this.prepare().then(() => runCommand(`yarn run ${command}`, this.tmpDir));
+  }
+
+  deploy() {
+    return this.prepareAndRun('deploy');
+  }
+
+  start() {
+    return this.prepareAndRun('start');
   }
 }
 

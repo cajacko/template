@@ -11,18 +11,24 @@ import test from './commands/test';
 import deploy from './commands/deploy';
 import start from './commands/start';
 
+const runOptions = [
+  ['-i, --interactive'],
+  ['-t, --template [type]'],
+  ['-o, --offline'],
+  ['-r, --reset'],
+];
+
 registerCommand('start', start, {
-  options: [
-    ['-i, --interactive'],
-    ['-t, --template [type]'],
-    ['-o, --offline'],
-    ['-r, --reset'],
-  ],
+  options: runOptions,
 });
 
 registerCommand('init', init);
 registerCommand('test', test);
-registerCommand('deploy', deploy);
+
+registerCommand('deploy', deploy, {
+  options: runOptions,
+});
+
 registerCommand('upgrade', upgrade);
 
 registerCommand('postinstall', () => {}, { ignoreUnlink: true });

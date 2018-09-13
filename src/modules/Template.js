@@ -4,12 +4,20 @@ import { join } from 'path';
 import { runCommand, getSettings } from '@cajacko/template-utils';
 
 class Template {
-  constructor(templateConfig, projectConfig, commander, env, projectDir) {
+  constructor(
+    templateConfig,
+    projectConfig,
+    commander,
+    env,
+    projectDir,
+    command,
+  ) {
     this.commander = commander;
     this.templateConfig = templateConfig;
     this.projectConfig = projectConfig;
     this.env = env;
     this.projectDir = projectDir;
+    this.command = command;
     this.filesDir = join(__dirname, '../../files');
     this.tmpDir = join(projectDir, 'tmp', templateConfig.key);
     this.projectSrcDir = join(projectDir, 'src');
@@ -20,7 +28,10 @@ class Template {
 
   installDependencies(dir) {
     if (this.commander.offline) return Promise.resolve();
-    return runCommand('yarn install', dir || this.tmpDir);
+    console.log('- Installing dependencies');
+    return runCommand('yarn install', dir || this.tmpDir, { noLog: true }).then(() => {
+      console.log('- Finished installing dependencies');
+    });
   }
 
   runIfUseLocal(cb) {
