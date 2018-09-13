@@ -25,11 +25,16 @@ const watchLib = () => {
       const outDirOptions = getDirOptions(libOutDirs);
       const watchDirs = getDirOptions(libDirsToWatch);
 
-      return runCommand(`yarn build:lib ${outDirOptions}`, libPath).then(() => {
-        if (watchDirs !== '') {
-          runCommand(`yarn watch:lib ${watchDirs}`, libPath);
-        }
-      });
+      return runCommand(`yarn build:lib ${outDirOptions}`, libPath)
+        .then(() => {
+          if (watchDirs !== '') {
+            runCommand(`yarn watch:lib ${watchDirs}`, libPath);
+          }
+        })
+        .catch((e) => {
+          console.log(`Failed to compile the lib module at "${libPath}". Sometimes if you remove node_modules and run yarn again inside this dir. It will work.`);
+          throw e;
+        });
     })
     .then(resolvePromise);
 };
