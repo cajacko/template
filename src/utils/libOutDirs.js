@@ -6,9 +6,16 @@ let resolvePromise;
 
 const libOutDirs = {};
 const libDirsToWatch = {};
+let watchLibHasRun = false;
 
-const watchLib = () =>
-  getSettings('localNPMPackagePaths')
+const watchLib = () => {
+  if (watchLibHasRun) {
+    throw new Error('Trying to run the libOutDir command multiple times. This should never happen');
+  }
+
+  watchLibHasRun = true;
+
+  return getSettings('localNPMPackagePaths')
     .then((localNPMPackagePaths) => {
       const libPath = localNPMPackagePaths['@cajacko/lib'];
 
@@ -25,6 +32,7 @@ const watchLib = () =>
       });
     })
     .then(resolvePromise);
+};
 
 export const isWatching = new Promise((resolve) => {
   resolvePromise = resolve;
@@ -41,7 +49,7 @@ export const registerLibOutDir = (dir, shouldWatch) => {
 export const setOutDirIsReady = (dir) => {
   libOutDirs[dir] = true;
 
-  const canWatch = Object.values(libOutDirs).find(val => !!val);
+  const canWatch = !Object.values(libOutDirs).some(val => !val);
 
   if (canWatch) {
     watchLib();
