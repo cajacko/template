@@ -13,6 +13,6 @@ const isProjectDirLinked = () =>
         isSymLinked(join(projectDir, 'node_modules/@cajacko/lib')),
       ]))
     .then(([link1, link2, link3]) => link1 && link2 && link3)
-    .catch(() => true);
+    .catch(() => false);
 
 export default isProjectDirLinked;
