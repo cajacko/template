@@ -11,6 +11,7 @@ import {
 import Template from '../modules/Template';
 import { registerLibOutDir, setOutDirIsReady } from '../utils/libOutDirs';
 import copyAndWatch from '../utils/copyAndWatch';
+import { MOBILE_APP } from '../config/requiredEnv';
 
 class MobileApp extends Template {
   constructor(...args) {
@@ -21,11 +22,12 @@ class MobileApp extends Template {
     this.libOutDir = join(this.tmpDir, 'node_modules/@cajacko/lib');
 
     this.deployExpo = this.deployExpo.bind(this);
+    this.deployToLocal = this.deployToLocal.bind(this);
 
     this.deployFuncs = {
-      'dev - expo': this.deployExpo,
-      'dev - local': this.deployExpo,
-      'alpha - deploygate': this.deployExpo,
+      'dev-expo': this.deployExpo,
+      'dev-local': this.deployToLocal,
+      'alpha-deploygate': this.deployExpo,
       beta: this.deployExpo,
       live: this.deployExpo,
     };
@@ -51,6 +53,14 @@ class MobileApp extends Template {
       appJSON.expo.splash.image = `./${splashIconPath}`;
       appJSON.expo.name = expoName;
       appJSON.expo.slug = expoSlug;
+      appJSON.expo.icon = `./${this.templateConfig.icon}`;
+      appJSON.expo.version = this.projectConfig.version;
+
+      if (!appJSON.expo.ios) appJSON.expo.ios = {};
+      if (!appJSON.expo.android) appJSON.expo.android = {};
+
+      appJSON.expo.ios.bundleIdentifier = this.env.BUNDLE_ID;
+      appJSON.expo.android.package = this.env.BUNDLE_ID;
 
       return writeJSON(appJSONPath, appJSON, { spaces: 2 });
     });
@@ -115,21 +125,27 @@ class MobileApp extends Template {
   }
 
   deploy() {
+    Object.keys(MOBILE_APP).forEach((envKey) => {
+      if (!this.env[envKey]) {
+        throw new Error(`${envKey} must be set in env`);
+      }
+    });
+
     return this.prompt().then(deploy => this.deployFuncs[deploy]());
   }
 
   deployExpo() {
     const { EXPO_USERNAME, EXPO_PASSWORD } = this.env;
 
-    if (!EXPO_USERNAME || !EXPO_PASSWORD) {
-      throw new Error('EXPO_USERNAME and EXPO_PASSWORD must be set in env');
-    }
-
     return this.prepareAndRun(
       'yarn exp logout',
       `yarn exp login -u ${EXPO_USERNAME} -p ${EXPO_PASSWORD}`,
       'yarn exp publish --non-interactive',
     );
+  }
+
+  deployToLocal() {
+    return this.prepareAndRun('yarn run expo build:android');
   }
 
   start() {

@@ -1,6 +1,7 @@
 {
   "title": "Example",
   "slug": "example",
+  "version": "0.1.0",
   "description": "Example description.",
   "authorName": "Charlie Jackson",
   "authorUrl": "https://charliejackson.com",
