@@ -144,8 +144,80 @@ class MobileApp extends Template {
     );
   }
 
+  expoBuild() {
+    let onReadyToBuild;
+    let onFinishedBuild;
+    let finishedBuildingJSCount = 0;
+    let kill;
+
+    const readyToBuild = new Promise((resolve, reject) => {
+      onReadyToBuild = () => {
+        console.log('READY TO BUILD');
+        resolve();
+      };
+
+      setTimeout(() => {
+        reject(new Error('Timed out waiting for expo packager to start'));
+      }, 60 * 1000);
+    });
+
+    const postBuild = new Promise((resolve, reject) => {
+      onFinishedBuild = () => {
+        console.log('POST BUILD');
+        kill();
+        resolve();
+      };
+
+      readyToBuild
+        .then(() => {
+          setTimeout(() => {
+            kill();
+            reject(new Error('Timed out waiting for expo build'));
+          }, 5 * 60 * 1000);
+        })
+        .catch((e) => {
+          kill();
+          reject(e);
+        });
+    });
+
+    runCommand('yarn run exp start', this.tmpDir, {
+      getKill: (k) => {
+        kill = k;
+      },
+      onData: (data) => {
+        const string = String(data);
+        console.log(string);
+
+        if (string.includes('Expo is ready')) {
+          onReadyToBuild();
+        } else if (string.includes('Finished building JavaScript')) {
+          finishedBuildingJSCount += 1;
+          console.log('FINISHED JS', finishedBuildingJSCount);
+
+          if (finishedBuildingJSCount === 3) {
+            onFinishedBuild();
+          }
+        }
+      },
+    });
+
+    return { readyToBuild, postBuild };
+  }
+
   deployToLocal() {
-    return this.prepareAndRun('yarn run expo build:android');
+    const { readyToBuild, postBuild } = this.expoBuild();
+
+    return this.prepare()
+      .then(() => readyToBuild)
+      .then(() =>
+        Promise.all([
+          runCommand('yarn run expo build:android', this.tmpDir),
+          postBuild,
+        ]))
+      .then(() => {
+        console.log('Finished');
+      });
   }
 
   start() {
