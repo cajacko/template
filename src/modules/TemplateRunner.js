@@ -82,6 +82,11 @@ class TemplateRunner {
     return ask({
       type: 'checkbox',
       choices: templateKeys,
+      validate: (answers) => {
+        if (answers.length < 1) return 'You must select at least 1 template, use the spacebar to select';
+
+        return true;
+      }
     });
   }
 }
