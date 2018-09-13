@@ -4,6 +4,7 @@
     "splash": {
       "image": "./splash-icon.png",
       "backgroundColor": "#26c6da"
-    }
+    },
+    "privacy": "unlisted"
   }
 }
