@@ -12,16 +12,16 @@ const init = () =>
     getProjectDir(),
     getProjectConfig(),
     getLastLocalModuleVersion('@cajacko/template'),
-    getLastLocalModuleVersion('@cajacko/lib'),
-  ]).then(([projectDir, projectConfig, lastTemplateVersion, lastLibVersion]) => {
-    const setupRunner = new SetupRunner(
-      projectDir,
-      projectConfig,
-      lastTemplateVersion,
-      lastLibVersion,
-    );
+  ]).then(([projectDir, projectConfig, lastTemplateVersion]) =>
+    getLastLocalModuleVersion('@cajacko/lib').then((lastLibVersion) => {
+      const setupRunner = new SetupRunner(
+        projectDir,
+        projectConfig,
+        lastTemplateVersion,
+        lastLibVersion,
+      );
 
-    return setupRunner.runSteps();
-  });
+      return setupRunner.runSteps();
+    }));
 
 export default init;

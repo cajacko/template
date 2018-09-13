@@ -36,6 +36,7 @@ class Template {
   }
 
   runIfUseLocal(cb) {
+    // TODO: if command is deploy and on CI, never use local lib
     if (!this.env.USE_LOCAL_LIBS) return Promise.resolve();
 
     return cb();

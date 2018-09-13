@@ -82,21 +82,31 @@ class MobileApp extends Template {
   }
 
   prepareAndRun(...commands) {
-    const runCommands = (i = 0) => {
+    let i = 0;
+
+    const runCommands = () => {
       const command = commands[i];
+      i += 1;
 
       if (!command) return Promise.resolve();
 
-      return runCommand(command, this.tmpDir).then(() => runCommands(i + 1));
+      return runCommand(command, this.tmpDir).then(() => runCommands());
     };
 
     return this.prepare().then(runCommands);
   }
 
   deploy() {
+    const { EXPO_USERNAME, EXPO_PASSWORD } = this.env;
+
+    if (!EXPO_USERNAME || !EXPO_PASSWORD) {
+      throw new Error('EXPO_USERNAME and EXPO_PASSWORD must be set in env');
+    }
+
     return this.prepareAndRun(
-      'npx login -u <EXPO USERNAME> -p <EXO PASSWORD>',
-      'npx publish --non-interactive',
+      'yarn exp logout',
+      `yarn exp login -u ${EXPO_USERNAME} -p ${EXPO_PASSWORD}`,
+      'yarn exp publish --non-interactive',
     );
   }
 

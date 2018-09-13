@@ -56,9 +56,15 @@ class SetupRunner extends StepRunner {
   init() {
     Object.keys(setupTemplates).forEach((setupTemplateKey) => {
       const SetupTemplate = setupTemplates[setupTemplateKey];
+
+      const templatesUsed = this.projectConfig.templates
+        ? Object.values(this.projectConfig.templates).map(({ type }) => type)
+        : [];
+
       const setupTemplate = new SetupTemplate(this, {
         projectConfig: this.projectConfig,
         projectDir: this.projectDir,
+        templatesUsed,
       });
 
       this.addAllMatchingMethodsToSteps(setupTemplate);
