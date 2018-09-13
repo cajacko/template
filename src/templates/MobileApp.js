@@ -6,6 +6,7 @@ import {
   runCommand,
   copyTmpl,
   copyDependencies,
+  ask,
 } from '@cajacko/template-utils';
 import Template from '../modules/Template';
 import { registerLibOutDir, setOutDirIsReady } from '../utils/libOutDirs';
@@ -18,6 +19,16 @@ class MobileApp extends Template {
     this.tmplDir = join(this.filesDir, 'mobile');
     this.tmplSrcDir = join(this.tmplDir, 'src');
     this.libOutDir = join(this.tmpDir, 'node_modules/@cajacko/lib');
+
+    this.deployExpo = this.deployExpo.bind(this);
+
+    this.deployFuncs = {
+      'dev - expo': this.deployExpo,
+      'dev - local': this.deployExpo,
+      'alpha - deploygate': this.deployExpo,
+      beta: this.deployExpo,
+      live: this.deployExpo,
+    };
   }
 
   init() {
@@ -81,6 +92,13 @@ class MobileApp extends Template {
         ])));
   }
 
+  prompt() {
+    return ask({
+      type: 'list',
+      choices: Object.keys(this.deployFuncs),
+    });
+  }
+
   prepareAndRun(...commands) {
     let i = 0;
 
@@ -97,6 +115,10 @@ class MobileApp extends Template {
   }
 
   deploy() {
+    return this.prompt().then(deploy => this.deployFuncs[deploy]());
+  }
+
+  deployExpo() {
     const { EXPO_USERNAME, EXPO_PASSWORD } = this.env;
 
     if (!EXPO_USERNAME || !EXPO_PASSWORD) {
