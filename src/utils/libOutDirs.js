@@ -5,19 +5,23 @@ import { getSettings, runCommand } from '@cajacko/template-utils';
 let resolvePromise;
 
 const libOutDirs = {};
+const libDirsToWatch = {};
 
 const watchLib = () =>
   getSettings('localNPMPackagePaths')
     .then((localNPMPackagePaths) => {
       const libPath = localNPMPackagePaths['@cajacko/lib'];
 
-      const outDirOptions = Object.keys(libOutDirs).reduce(
-        (acc, val) => `${acc} --${val}`,
-        '',
-      );
+      const getDirOptions = obj =>
+        Object.keys(obj).reduce((acc, val) => `${acc} --${val}`, '');
+
+      const outDirOptions = getDirOptions(libOutDirs);
+      const watchDirs = getDirOptions(libDirsToWatch);
 
       return runCommand(`yarn build:lib ${outDirOptions}`, libPath).then(() => {
-        runCommand(`yarn watch:lib ${outDirOptions}`, libPath);
+        if (watchDirs !== '') {
+          runCommand(`yarn watch:lib ${watchDirs}`, libPath);
+        }
       });
     })
     .then(resolvePromise);
@@ -26,8 +30,12 @@ export const isWatching = new Promise((resolve) => {
   resolvePromise = resolve;
 });
 
-export const registerLibOutDir = (dir) => {
+export const registerLibOutDir = (dir, shouldWatch) => {
   libOutDirs[dir] = false;
+
+  if (shouldWatch) {
+    libDirsToWatch[dir] = true;
+  }
 };
 
 export const setOutDirIsReady = (dir) => {

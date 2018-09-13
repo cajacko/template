@@ -20,7 +20,8 @@ class GraphQL extends Template {
     this.tmpFuncDir = join(this.tmpDir, 'functions');
     this.libOutDir = join(this.tmpFuncDir, 'node_modules/@cajacko/lib');
 
-    this.runIfUseLocal(() => registerLibOutDir(this.libOutDir));
+    this.runIfUseLocal(() =>
+      registerLibOutDir(this.libOutDir, this.shouldWatch));
   }
 
   start() {
@@ -45,11 +46,7 @@ class GraphQL extends Template {
             this.templateConfig,
           ),
         ]))
-      .then(() => runCommand('yarn start', this.tmpDir))
-      .catch((e) => {
-        console.error(e);
-        process.exit(1);
-      });
+      .then(() => runCommand('yarn start', this.tmpDir));
   }
 }
 

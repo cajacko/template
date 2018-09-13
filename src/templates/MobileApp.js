@@ -18,11 +18,9 @@ class MobileApp extends Template {
     this.tmplDir = join(this.filesDir, 'mobile');
     this.tmplSrcDir = join(this.tmplDir, 'src');
     this.libOutDir = join(this.tmpDir, 'node_modules/@cajacko/lib');
-    this.shouldWatch = this.command === 'start';
 
-    if (this.shouldWatch) {
-      this.runIfUseLocal(() => registerLibOutDir(this.libOutDir));
-    }
+    this.runIfUseLocal(() =>
+      registerLibOutDir(this.libOutDir, this.shouldWatch));
   }
 
   setAppJSON() {
@@ -49,7 +47,7 @@ class MobileApp extends Template {
     const tmpSrc = join(this.tmpDir, 'src');
 
     if (this.shouldWatch) {
-      return copyAndWatch(this.projectSrcDir, tmpSrc);
+      return copyAndWatch(this.projectSrcDir, tmpSrc, { exitOnError: true });
     }
 
     return copy(this.projectSrcDir, tmpSrc);
@@ -86,16 +84,27 @@ class MobileApp extends Template {
         ])));
   }
 
-  prepareAndRun(command) {
-    return this.prepare().then(() => runCommand(`yarn run ${command}`, this.tmpDir));
+  prepareAndRun(...commands) {
+    const runCommands = (i = 0) => {
+      const command = commands[i];
+
+      if (!command) return Promise.resolve();
+
+      return runCommand(command, this.tmpDir).then(() => runCommands(i + 1));
+    };
+
+    return this.prepare().then(runCommands);
   }
 
   deploy() {
-    return this.prepareAndRun('deploy');
+    return this.prepareAndRun(
+      'npx login -u <EXPO USERNAME> -p <EXO PASSWORD>',
+      'npx publish --non-interactive',
+    );
   }
 
   start() {
-    return this.prepareAndRun('start');
+    return this.prepareAndRun('yarn run start');
   }
 }
 
