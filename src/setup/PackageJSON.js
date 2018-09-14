@@ -1,6 +1,8 @@
 // @flow
 
 import { orderObj } from '@cajacko/template-utils';
+import { readJSON } from 'fs-extra';
+import { join } from 'path';
 import SetupTemplate from '../modules/SetupTemplate';
 
 const projectJSON = {
@@ -31,15 +33,86 @@ const packageJSONOrder = [
   'license',
 ];
 
-const endPriority = ['dependencies', 'devDependencies'];
+const endPriority = ['dependencies', 'devDependencies', 'peerDependencies'];
 
+/**
+ * Decide what the package.json file should look like based on the project
+ * config
+ */
 class PackageJSON extends SetupTemplate {
+  /**
+   * Set the initial packageJSON object
+   *
+   * @param {*} args The args needed by the class
+   *
+   * @return {Void} No return value
+   */
   constructor(...args) {
     super(...args);
 
     this.packageJSON = projectJSON;
   }
 
+  /**
+   * Get all the dependencies and peerDependencies in the lib module and add
+   * them as peer dependencies to the project. Mainly so flow and eslint can
+   * figure out whats going on
+   *
+   * @return {Promise} Promise that resolves when we've added the dependencies
+   */
+  addLibDepsAsPeer() {
+    const libJSONPath = join(
+      this.projectDir,
+      'node_modules/@cajacko/lib/package.json'
+    );
+
+    return readJSON(libJSONPath).then(({ dependencies, peerDependencies }) => {
+      /**
+       * Add all the packages supplied to the func, to the queue to get
+       * installed
+       *
+       * @param {Object} packages An object representing all the packages and
+       * their versions
+       *
+       * @return {Void} No return value
+       */
+      const addPackages = (packages) => {
+        Object.keys(packages).forEach((key) => {
+          const version = packages[key];
+
+          this.npm.add({
+            [key]: { version, type: 'peer' },
+          });
+        });
+      };
+
+      addPackages(dependencies);
+      addPackages(peerDependencies);
+    });
+  }
+
+  /**
+   * On setup, add the lib deps
+   *
+   * @return {Promise} Promise that resolves when we've queued up the
+   * dependencies
+   */
+  setupFiles() {
+    const { includes } = this.templatesUsed;
+
+    if (includes('mobile-app') || includes('graphql')) {
+      return this.addLibDepsAsPeer();
+    }
+
+    return Promise.resolve();
+  }
+
+  /**
+   * After file setup, setup the defaults for the package.json file. Doing it
+   * here in case any other setup fiels want to do stuff before hand
+   *
+   * @return {Promise} Promise that resovles when we've queued up everything
+   */
   postSetupFiles() {
     if (this.projectConfig.ignorePackageJSON) return Promise.resolve();
 
