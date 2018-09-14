@@ -41,7 +41,7 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.0.0",
-    "@cajacko/template-utils": "https://github.com/cajacko/template-utils.git#v0.4.0",
+    "@cajacko/template-utils": "https://github.com/cajacko/template-utils.git#v0.5.0",
     "babel-cli": "^6.26.0",
     "babel-eslint": "^8.2.3",
     "babel-plugin-styled-components": "^1.6.0",

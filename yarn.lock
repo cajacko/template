@@ -85,9 +85,9 @@
     lodash "^4.2.0"
     to-fast-properties "^2.0.0"
 
-"@cajacko/template-utils@https://github.com/cajacko/template-utils.git#v0.3.0":
-  version "0.3.0"
-  resolved "https://github.com/cajacko/template-utils.git#78f319432de15a3c72204a7186f85a8e4f487e50"
+"@cajacko/template-utils@https://github.com/cajacko/template-utils.git#v0.4.0":
+  version "0.4.0"
+  resolved "https://github.com/cajacko/template-utils.git#6cab15815abd8cd0c86258f25a8e51d6074f0106"
   dependencies:
     commander "^2.17.1"
     ejs "^2.6.1"
@@ -100,10 +100,11 @@
     simple-git "^1.96.0"
     watch "^1.0.2"
 
-"@cajacko/template-utils@https://github.com/cajacko/template-utils.git#v0.4.0":
-  version "0.4.0"
-  resolved "https://github.com/cajacko/template-utils.git#6cab15815abd8cd0c86258f25a8e51d6074f0106"
+"@cajacko/template-utils@https://github.com/cajacko/template-utils.git#v0.5.0":
+  version "0.5.0"
+  resolved "https://github.com/cajacko/template-utils.git#1e3053f28342892d848265fff81272594004eb40"
   dependencies:
+    chalk "^2.4.1"
     commander "^2.17.1"
     ejs "^2.6.1"
     fs-extra "^7.0.0"
@@ -1028,7 +1029,7 @@ chalk@2.3.0:
     escape-string-regexp "^1.0.5"
     supports-color "^4.0.0"
 
-chalk@^2.0.0, chalk@^2.0.1, chalk@^2.1.0, chalk@^2.3.1:
+chalk@^2.0.0, chalk@^2.0.1, chalk@^2.1.0, chalk@^2.3.1, chalk@^2.4.1:
   version "2.4.1"
   resolved "https://registry.node-modules.io/tarballs/chalk/2.4.1.tgz#18c49ab16a037b6eb0152cc83e3471338215b66e"
   dependencies:
