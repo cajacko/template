@@ -68,8 +68,20 @@ const eslintConfig = {
         peerDependencies: true,
       },
     ],
-    'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
+    'react/jsx-filename-extension': [
+      1,
+      {
+        extensions: ['.js', '.native.js', '.web.js', '.ios.js', '.android.js'],
+      },
+    ],
     'class-methods-use-this': 'off',
+  },
+  settings: {
+    'import/resolver': {
+      node: {
+        extensions: ['.js', '.native.js', '.web.js', '.ios.js', '.android.js'],
+      },
+    },
   },
   parser: 'babel-eslint',
   plugins: ['jest', 'flowtype'],
