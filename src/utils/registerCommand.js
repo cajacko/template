@@ -29,6 +29,7 @@ const registerCommand = (command, callback, configArg) => {
       Promise.all([getProjectConfig(), getProjectEnv(), getProjectDir()])
         .then(([projectConfig, env, projectDir]) =>
           isProjectDirLinked().then((isLinked) => {
+            console.log('registerCommand - 2');
             const run = () => callback(...registerArgs, projectConfig, env);
 
             if (registerArgs[0][skipOptionParam]) {
@@ -48,6 +49,9 @@ const registerCommand = (command, callback, configArg) => {
 
               return linkAllNameSpacedDependencies(NPM_NAMESPACE, projectDir)
                 .then(() => buildLib())
+                .catch((e) => {
+                  logger.warn(e);
+                })
                 .then(runAndSkip);
             }
 

@@ -27,7 +27,7 @@ class SetupRunner extends StepRunner {
     super(steps);
 
     this.projectDir = projectDir;
-    this.projectConfig = projectConfig;
+    this.projectConfig = projectConfig || {};
 
     this.npm = new QueuedNPMManager(projectDir);
 

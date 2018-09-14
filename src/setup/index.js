@@ -16,7 +16,6 @@ import EditorConfig from './EditorConfig';
 import GitAttributes from './GitAttributes';
 import Changelog from './Changelog';
 import JSDocs from './JSDocs';
-import Example from './Example';
 import Babel from './Babel';
 import NVM from './NVM';
 
@@ -37,7 +36,6 @@ const setupTemplates = {
   gitattributes: GitAttributes,
   changelog: Changelog,
   jsdocs: JSDocs,
-  example: Example,
   babel: Babel,
   nvm: NVM,
 };
