@@ -1,7 +1,7 @@
 // @flow
 
-import init from './init';
-
-const test = init;
+const test = (commander, projectConfig, env) => {
+  logger.log('TEST');
+};
 
 export default test;

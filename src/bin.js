@@ -3,6 +3,7 @@
 // @flow
 
 import '@babel/polyfill';
+import './utils/loadLogger';
 import { processCommands } from '@cajacko/template-utils';
 import registerCommand from './utils/registerCommand';
 import upgrade from './commands/upgrade';
