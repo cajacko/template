@@ -1,16 +1,21 @@
 // @flow
 
-import { getProjectDir } from '@cajacko/template-utils';
+import { getProjectDir, isSymLink } from '@cajacko/template-utils';
 import { join } from 'path';
-import isSymLinked from 'is-symlink';
 
+/**
+ * Is the project sym linked to everything it should be, if we're developing
+ * the templates
+ *
+ * @return {Promise} Promise that resolves with tru or false
+ */
 const isProjectDirLinked = () =>
   getProjectDir()
     .then(projectDir =>
       Promise.all([
-        isSymLinked(join(projectDir, 'node_modules/@cajacko/template')),
-        isSymLinked(join(__dirname, '../../node_modules/@cajacko/template-utils')),
-        isSymLinked(join(projectDir, 'node_modules/@cajacko/lib')),
+        isSymLink(join(projectDir, 'node_modules/@cajacko/template')),
+        isSymLink(join(__dirname, '../../node_modules/@cajacko/template-utils')),
+        isSymLink(join(projectDir, 'node_modules/@cajacko/lib')),
       ]))
     .then(([link1, link2, link3]) => link1 && link2 && link3)
     .catch(() => false);

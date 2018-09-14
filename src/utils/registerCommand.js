@@ -15,6 +15,20 @@ import { NPM_NAMESPACE, SKIP_OPTION } from '../config/general';
 import buildLib from './buildLib';
 import unlinkLibs from './unlinkLibs';
 
+/**
+ * Register a command that can be used via cli. Pass in the callback and some
+ * optional options.
+ *
+ * If we have local versions of the template library we'll check to see if we
+ * should compile them first. So we are using the latest. Then we'll run the
+ * commands
+ *
+ * @param {String} command The command to register
+ * @param {Function} callback The function to run when the command is called
+ * @param {Object} [configArg] Options for registering the command
+ *
+ * @return {Object} The commander instance
+ */
 const registerCommand = (command, callback, configArg) => {
   const config = typeof configArg === 'object' ? configArg : { options: [] };
   const options = config.options || [];
@@ -29,6 +43,12 @@ const registerCommand = (command, callback, configArg) => {
       Promise.all([getProjectConfig(), getProjectEnv(), getProjectDir()])
         .then(([projectConfig, env, projectDir]) =>
           isProjectDirLinked().then((isLinked) => {
+            /**
+             * Run the original command with all the correct params
+             *
+             * @return {Promise} Promise that resolves when the command has
+             * finished
+             */
             const run = () => callback(...registerArgs, projectConfig, env);
 
             if (registerArgs[0][skipOptionParam] || env.SKIP_LINK_BUILD) {
@@ -37,6 +57,13 @@ const registerCommand = (command, callback, configArg) => {
 
             process.env.SKIP_LINK_BUILD = true;
 
+            /**
+             * Run the original command, passing in the skip flag so we don't
+             * compile the libs again
+             *
+             * @return {Promise} Promise that resolves when the command has
+             * finished
+             */
             const runAndSkip = () => {
               const fullCommand = `${process.argv.join(' ')} ${SKIP_OPTION}`;
 
