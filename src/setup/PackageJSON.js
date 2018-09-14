@@ -1,8 +1,6 @@
 // @flow
 
 import { orderObj } from '@cajacko/template-utils';
-import merge from 'lodash/merge';
-import { readJSON, pathExists } from 'fs-extra';
 import SetupTemplate from '../modules/SetupTemplate';
 
 const projectJSON = {
@@ -44,6 +42,17 @@ class PackageJSON extends SetupTemplate {
 
   setupFiles() {
     this.packageJSON = projectJSON;
+
+    if (this.isSelf) {
+      Object.keys(this.packageJSON.scripts).forEach((key) => {
+        const val = this.packageJSON.scripts[key];
+
+        this.packageJSON.scripts[key] = val.replace(
+          'template',
+          'node dist/bin.js',
+        );
+      });
+    }
   }
 
   postSetupFiles() {
@@ -58,7 +67,7 @@ class PackageJSON extends SetupTemplate {
       if (templates) {
         Object.keys(templates).forEach((template) => {
           const {
-            type, bin, files, main,
+            type, bin, files, main, dependencies,
           } = templates[template];
 
           if (type !== 'npm-module') return;
@@ -76,6 +85,16 @@ class PackageJSON extends SetupTemplate {
               if (!this.packageJSON.bin) this.packageJSON.bin = {};
 
               this.packageJSON.bin[command] = path;
+            });
+          }
+
+          if (dependencies) {
+            Object.keys(dependencies).forEach((key) => {
+              const version = dependencies[key];
+
+              this.npm.add({
+                [key]: { version },
+              });
             });
           }
         });

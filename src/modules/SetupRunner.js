@@ -7,6 +7,7 @@ import {
 } from '@cajacko/template-utils';
 import { join } from 'path';
 import setupTemplates from '../setup';
+import selfConfig from '../../project.json';
 
 class SetupRunner extends StepRunner {
   constructor(projectDir, projectConfig, lastTemplateVersion, lastLibVersion) {
@@ -31,13 +32,17 @@ class SetupRunner extends StepRunner {
 
     this.npm = new QueuedNPMManager(projectDir);
 
-    const templateGitURL = `https://github.com/cajacko/template.git#${lastTemplateVersion}`;
-    const libGitURL = `https://github.com/cajacko/lib.git#${lastLibVersion}`;
+    this.isSelf = this.projectConfig.slug === selfConfig.slug;
 
-    this.npm.add({
-      [templateGitURL]: { isGitURl: true },
-      [libGitURL]: { isGitURl: true },
-    });
+    if (!this.isSelf) {
+      const templateGitURL = `https://github.com/cajacko/template.git#${lastTemplateVersion}`;
+      const libGitURL = `https://github.com/cajacko/lib.git#${lastLibVersion}`;
+
+      this.npm.add({
+        [templateGitURL]: { isGitURl: true },
+        [libGitURL]: { isGitURl: true },
+      });
+    }
 
     this.fs = new QueuedFileManagement(
       join(__dirname, '../../files'),
@@ -65,6 +70,7 @@ class SetupRunner extends StepRunner {
         projectConfig: this.projectConfig,
         projectDir: this.projectDir,
         templatesUsed,
+        isSelf: this.isSelf,
       });
 
       this.addAllMatchingMethodsToSteps(setupTemplate);
