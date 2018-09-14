@@ -29,7 +29,6 @@ const eslintConfig = {
         matchDescription: '.+',
         requireParamDescription: true,
         requireReturnDescription: true,
-        requireParamType: true,
       },
     ],
     'require-jsdoc': [
