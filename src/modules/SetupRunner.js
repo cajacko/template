@@ -34,7 +34,7 @@ class SetupRunner extends StepRunner {
 
     this.isSelf = this.projectConfig.slug === selfConfig.slug;
 
-    if (!this.isSelf || this.projectConfig.ignoreTemplates) {
+    if (!this.isSelf && !this.projectConfig.ignoreTemplates) {
       const templateGitURL = `https://github.com/cajacko/template.git#${lastTemplateVersion}`;
       const libGitURL = `https://github.com/cajacko/lib.git#${lastLibVersion}`;
 
