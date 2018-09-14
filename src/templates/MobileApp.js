@@ -152,7 +152,6 @@ class MobileApp extends Template {
 
     const readyToBuild = new Promise((resolve, reject) => {
       onReadyToBuild = () => {
-        console.log('READY TO BUILD');
         resolve();
       };
 
@@ -163,7 +162,6 @@ class MobileApp extends Template {
 
     const postBuild = new Promise((resolve, reject) => {
       onFinishedBuild = () => {
-        console.log('POST BUILD');
         kill();
         resolve();
       };
@@ -187,13 +185,11 @@ class MobileApp extends Template {
       },
       onData: (data) => {
         const string = String(data);
-        console.log(string);
 
         if (string.includes('Expo is ready')) {
           onReadyToBuild();
         } else if (string.includes('Finished building JavaScript')) {
           finishedBuildingJSCount += 1;
-          console.log('FINISHED JS', finishedBuildingJSCount);
 
           if (finishedBuildingJSCount === 3) {
             onFinishedBuild();
@@ -216,7 +212,7 @@ class MobileApp extends Template {
           postBuild,
         ]))
       .then(() => {
-        console.log('Finished');
+        // TODO: Grab the download url
       });
   }
 

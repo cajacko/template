@@ -7,6 +7,7 @@ import {
   getProjectDir,
   linkAllNameSpacedDependencies,
   runCommand,
+  killAllCommands,
 } from '@cajacko/template-utils';
 import isProjectDirLinked from './isProjectDirLinked';
 import { NPM_NAMESPACE, SKIP_OPTION } from '../config/general';
@@ -24,38 +25,49 @@ const registerCommand = (command, callback, configArg) => {
   return UtilsRegisterCommand(
     command,
     (...registerArgs) =>
-      Promise.all([getProjectConfig(), getProjectEnv(), getProjectDir()]).then(([projectConfig, env, projectDir]) =>
-        isProjectDirLinked().then((isLinked) => {
-          const run = () => callback(...registerArgs, projectConfig, env);
+      Promise.all([getProjectConfig(), getProjectEnv(), getProjectDir()])
+        .then(([projectConfig, env, projectDir]) =>
+          isProjectDirLinked().then((isLinked) => {
+            const run = () => callback(...registerArgs, projectConfig, env);
 
-          if (registerArgs[0][skipOptionParam]) {
-            return run();
-          }
-
-          const runAndSkip = () => {
-            const fullCommand = `${process.argv.join(' ')} ${SKIP_OPTION}`;
-
-            return runCommand(fullCommand, projectDir);
-          };
-
-          if (env.USE_LOCAL_LIBS || env.NO_ENV_FILE) {
-            if (isLinked === true) {
-              return buildLib(env.NO_ENV_FILE).then(runAndSkip);
+            if (registerArgs[0][skipOptionParam]) {
+              return run();
             }
 
-            return linkAllNameSpacedDependencies(NPM_NAMESPACE, projectDir)
-              .then(() => buildLib())
-              .then(runAndSkip);
+            const runAndSkip = () => {
+              const fullCommand = `${process.argv.join(' ')} ${SKIP_OPTION}`;
+
+              return runCommand(fullCommand, projectDir);
+            };
+
+            if (env.USE_LOCAL_LIBS || env.NO_ENV_FILE) {
+              if (isLinked === true) {
+                return buildLib(env.NO_ENV_FILE).then(runAndSkip);
+              }
+
+              return linkAllNameSpacedDependencies(NPM_NAMESPACE, projectDir)
+                .then(() => buildLib())
+                .then(runAndSkip);
+            }
+
+            if (config.ignoreUnlink) {
+              return run();
+            }
+
+            if (isLinked === false) return runAndSkip();
+
+            return unlinkLibs().then(runAndSkip);
+          }))
+        .catch(e => e)
+        .then((e) => {
+          killAllCommands();
+
+          if (e instanceof Error) {
+            console.error(e);
           }
 
-          if (config.ignoreUnlink) {
-            return run();
-          }
-
-          if (isLinked === false) return runAndSkip();
-
-          return unlinkLibs().then(runAndSkip);
-        })),
+          process.exit(0);
+        }),
     { options: [[SKIP_OPTION], ...options] },
   );
 };
