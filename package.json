@@ -3,16 +3,16 @@
   "version": "0.9.0",
   "description": "Templating engine for projects by Charlie Jackson",
   "bin": {
-    "template": "lib/bin.js"
+    "template": "dist/bin.js"
   },
   "scripts": {
-    "build": "babel src --out-dir lib -s --copy-files",
+    "build": "babel src --out-dir dist -s --copy-files",
     "watch": "yarn build --watch",
     "prepare": "yarn build",
     "babel": "babel"
   },
   "files": [
-    "lib/**/*",
+    "dist/**/*",
     "files/**/*"
   ],
   "main": "src/index.js",

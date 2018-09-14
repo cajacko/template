@@ -19,6 +19,7 @@ const projectJSON = {
     upgrade: 'template upgrade',
     postinstall: 'template postinstall',
     precommit: 'template precommit',
+    prepare: 'template prepare',
   },
 };
 
@@ -28,6 +29,7 @@ const packageJSONOrder = [
   'description',
   'bin',
   'scripts',
+  'main',
   'license',
 ];
 
@@ -38,20 +40,6 @@ class PackageJSON extends SetupTemplate {
     super(...args);
 
     this.packageJSON = {};
-  }
-
-  preRun() {
-    const path = this.fs.getDestPath('package.json');
-
-    return pathExists(path)
-      .then((exists) => {
-        if (!exists) return projectJSON;
-
-        return readJSON(path).then(json => merge(projectJSON, json));
-      })
-      .then((json) => {
-        this.packageJSON = json;
-      });
   }
 
   setupFiles() {
@@ -69,17 +57,27 @@ class PackageJSON extends SetupTemplate {
 
       if (templates) {
         Object.keys(templates).forEach((template) => {
-          const { type, bin } = templates[template];
+          const {
+            type, bin, files, main,
+          } = templates[template];
 
-          if (type !== 'npm-module' || !bin) return;
+          if (type !== 'npm-module') return;
 
-          Object.keys(bin).forEach((command) => {
-            const path = bin[command];
+          if (main) this.packageJSON.main = main;
 
-            if (!this.packageJSON.bin) this.packageJSON.bin = {};
+          if (!this.packageJSON.files) this.packageJSON.files = files || [];
 
-            this.packageJSON.bin[command] = path;
-          });
+          this.packageJSON.files.push('dist/**/*');
+
+          if (bin) {
+            Object.keys(bin).forEach((command) => {
+              const path = bin[command];
+
+              if (!this.packageJSON.bin) this.packageJSON.bin = {};
+
+              this.packageJSON.bin[command] = path;
+            });
+          }
         });
       }
     }

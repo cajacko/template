@@ -11,6 +11,7 @@ import test from './commands/test';
 import deploy from './commands/deploy';
 import start from './commands/start';
 import build from './commands/build';
+import prepare from './commands/prepare';
 
 const runOptions = [
   ['-i, --interactive'],
@@ -36,5 +37,6 @@ registerCommand('upgrade', upgrade);
 registerCommand('postinstall', () => {}, { ignoreUnlink: true });
 
 registerCommand('precommit', () => {});
+registerCommand('prepare', prepare);
 
 processCommands(process.argv);

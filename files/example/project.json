@@ -16,7 +16,7 @@
     "main-package": {
       "type": "npm-module",
       "bin": {
-        "example": "dist/example.js"
+        "example": "dist/bin.js"
       }
     }
   }

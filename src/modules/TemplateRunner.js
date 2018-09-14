@@ -84,6 +84,10 @@ class TemplateRunner {
     return this.getTemplatesAndRunCommandInEach('build');
   }
 
+  prepare() {
+    return this.getTemplatesAndRunCommandInEach('prepare');
+  }
+
   getTemplatesToRun() {
     const { template } = this.commander;
 

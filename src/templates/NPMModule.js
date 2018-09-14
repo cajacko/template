@@ -13,6 +13,10 @@ class NPMModule extends Template {
     this.babelOutDir = join(this.projectDir, 'dist');
   }
 
+  prepare() {
+    this.build();
+  }
+
   build() {
     return ensureDir(this.tmpDir)
       .then(() => copy(this.tmplDir, this.tmpDir))
