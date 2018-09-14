@@ -37,25 +37,12 @@ class PackageJSON extends SetupTemplate {
   constructor(...args) {
     super(...args);
 
-    this.packageJSON = {};
-  }
-
-  setupFiles() {
     this.packageJSON = projectJSON;
-
-    if (this.isSelf) {
-      Object.keys(this.packageJSON.scripts).forEach((key) => {
-        const val = this.packageJSON.scripts[key];
-
-        this.packageJSON.scripts[key] = val.replace(
-          'template',
-          'node dist/bin.js',
-        );
-      });
-    }
   }
 
   postSetupFiles() {
+    if (this.projectConfig.ignorePackageJSON) return Promise.resolve();
+
     if (this.projectConfig) {
       const {
         slug, description, license, templates,
@@ -103,7 +90,7 @@ class PackageJSON extends SetupTemplate {
 
     return this.fs.writeJSON(
       orderObj(this.packageJSON, packageJSONOrder, endPriority),
-      'package.json',
+      'package.json'
     );
   }
 }

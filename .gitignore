@@ -1,8 +1,29 @@
+# npm stuff
 node_modules
-*.log
-.DS_Store
-/dist
+
+# Build dirs
 /build
-package-lock.json
-/tmp
+/dist
 /lib
+
+# Temp dirs
+tmp
+temp
+
+# For sass compiled bits
+src/components/**/*.css
+src/constants/**/*.css
+
+# Env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Platform specific
+.DS_Store
+
+# Misc
+/coverage
+/docs
+*.log
