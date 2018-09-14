@@ -31,9 +31,11 @@ const registerCommand = (command, callback, configArg) => {
           isProjectDirLinked().then((isLinked) => {
             const run = () => callback(...registerArgs, projectConfig, env);
 
-            if (registerArgs[0][skipOptionParam]) {
+            if (registerArgs[0][skipOptionParam] || env.SKIP_LINK_BUILD) {
               return run();
             }
+
+            process.env.SKIP_LINK_BUILD = true;
 
             const runAndSkip = () => {
               const fullCommand = `${process.argv.join(' ')} ${SKIP_OPTION}`;
@@ -72,7 +74,7 @@ const registerCommand = (command, callback, configArg) => {
 
           process.exit(0);
         }),
-    { options: [[SKIP_OPTION], ...options] },
+    { options: [[SKIP_OPTION], ...options] }
   );
 };
 

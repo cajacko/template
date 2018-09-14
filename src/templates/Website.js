@@ -26,14 +26,14 @@ class Website extends StartTemplate {
       this.fs.copyTmpl(
         join(__dirname, 'files/web/webConfig.js'),
         join(this.tmpDir, 'src/config.js'),
-        { entryPath },
+        { entryPath }
       ),
       this.copySrcDependencies(),
     ]);
   }
 
   installDependencies() {
-    return this.runCommand('yarn install', this.tmpDir);
+    return this.runCommand('yarn install', this.tmpDir, { noLog: true });
   }
 
   start() {
@@ -49,7 +49,7 @@ class Website extends StartTemplate {
 
     return this.runCommand(
       `yarn build:lib --${buildTo}`,
-      join(__dirname, '../../'),
+      join(__dirname, '../../')
     );
   }
 
