@@ -1,4 +1,4 @@
-const { StartTemplate } = require('@cajacko/template');
+const { StartTemplate, logger } = require('@cajacko/template');
 const { copy, ensureDir, remove } = require('fs-extra');
 const { join } = require('path');
 
@@ -61,7 +61,7 @@ class Website extends StartTemplate {
 
   postCopy() {
     // TODO:
-    console.log('-- Copy flow, eslint, jsdocs to the tmp dir --');
+    logger.warn('-- Copy flow, eslint, jsdocs to the tmp dir --');
     return this.buildLib();
   }
 

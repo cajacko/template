@@ -1,6 +1,6 @@
 // @flow
 
-import { getSettings, runCommand } from '@cajacko/template-utils';
+import { getSettings, runCommand, logger } from '@cajacko/template-utils';
 
 let resolvePromise;
 
@@ -32,7 +32,7 @@ const watchLib = () => {
           }
         })
         .catch((e) => {
-          console.log(`Failed to compile the lib module at "${libPath}". Sometimes if you remove node_modules and run yarn again inside this dir. It will work.`);
+          logger.error(`Failed to compile the lib module at "${libPath}". Sometimes if you remove node_modules and run yarn again inside this dir. It will work.`);
           throw e;
         });
     })

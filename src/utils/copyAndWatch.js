@@ -3,6 +3,7 @@
 import {
   copyAndWatch as UCopyAndWatch,
   runCommand,
+  logger,
 } from '@cajacko/template-utils';
 import { join } from 'path';
 
@@ -16,7 +17,7 @@ const copyAndWatch = (src, dest, optionsArg = {}) => {
     return runCommand(command, path, { noLog: true }).then(() => {
       runCommand(`${command} --watch --skip-initial-build`, path).catch(() => {
         if (options.exitOnError) {
-          console.log(`Watch failed between "${src}" and "${dest}"`);
+          logger.error(`Watch failed between "${src}" and "${dest}"`);
           process.exit(1);
         }
       });

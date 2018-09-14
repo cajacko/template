@@ -1,7 +1,9 @@
 // @flow
 
 import { join } from 'path';
-import { runCommand, getSettings } from '@cajacko/template-utils';
+import { runCommand, getSettings, logger } from '@cajacko/template-utils';
+
+let installID = 0;
 
 class Template {
   constructor(
@@ -29,9 +31,13 @@ class Template {
 
   installDependencies(dir) {
     if (this.commander.offline) return Promise.resolve();
-    console.log('- Installing dependencies');
-    return runCommand('yarn install', dir || this.tmpDir, { noLog: true }).then(() => {
-      console.log('- Finished installing dependencies');
+    installID += 1;
+
+    const finalDir = dir || this.tmpDir;
+
+    logger.log(`${installID} - Installing dependencies - ${finalDir}`);
+    return runCommand('yarn install', finalDir, { noLog: true }).then(() => {
+      logger.log(`${installID} - Finished installing dependencies - ${finalDir}`);
     });
   }
 

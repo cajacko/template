@@ -8,6 +8,7 @@ import {
   linkAllNameSpacedDependencies,
   runCommand,
   killAllCommands,
+  logger,
 } from '@cajacko/template-utils';
 import isProjectDirLinked from './isProjectDirLinked';
 import { NPM_NAMESPACE, SKIP_OPTION } from '../config/general';
@@ -63,7 +64,7 @@ const registerCommand = (command, callback, configArg) => {
           killAllCommands();
 
           if (e instanceof Error) {
-            console.error(e);
+            logger.error(e);
           }
 
           process.exit(0);
