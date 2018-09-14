@@ -71,6 +71,7 @@ const eslintConfig = {
     'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
     'class-methods-use-this': 'off',
   },
+  parser: 'babel-eslint',
   plugins: ['jest', 'flowtype'],
   env: {
     'jest/globals': true,
@@ -80,6 +81,7 @@ const eslintConfig = {
     document: false,
     window: false,
     Image: false,
+    logger: false,
   },
 };
 
