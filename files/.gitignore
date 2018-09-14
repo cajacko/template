@@ -27,3 +27,5 @@ src/constants/**/*.css
 /coverage
 /docs
 *.log
+
+# Project Specific
