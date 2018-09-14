@@ -14,6 +14,7 @@ const projectJSON = {
     start: 'template start',
     init: 'template init',
     test: 'template test',
+    build: 'template build',
     deploy: 'template deploy',
     upgrade: 'template upgrade',
     postinstall: 'template postinstall',

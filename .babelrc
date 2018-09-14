@@ -1,8 +1,4 @@
 {
-  "presets": ["react", "env", "flow"],
-  "plugins": [
-    "transform-react-jsx-source",
-    "transform-object-rest-spread",
-    "babel-plugin-styled-components"
-  ]
+  "presets": ["env", "flow"],
+  "plugins": ["transform-object-rest-spread"]
 }
