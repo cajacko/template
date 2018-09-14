@@ -10,6 +10,7 @@ import init from './commands/init';
 import test from './commands/test';
 import deploy from './commands/deploy';
 import start from './commands/start';
+import build from './commands/build';
 
 const runOptions = [
   ['-i, --interactive'],
@@ -24,6 +25,7 @@ registerCommand('start', start, {
 
 registerCommand('init', init);
 registerCommand('test', test);
+registerCommand('build', build);
 
 registerCommand('deploy', deploy, {
   options: runOptions,

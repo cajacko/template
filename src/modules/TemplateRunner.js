@@ -80,6 +80,10 @@ class TemplateRunner {
     return this.conditionalResetAndRun('start');
   }
 
+  build() {
+    return this.getTemplatesAndRunCommandInEach('build');
+  }
+
   getTemplatesToRun() {
     const { template } = this.commander;
 

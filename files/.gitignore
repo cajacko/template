@@ -4,6 +4,7 @@ node_modules
 # Build dirs
 /build
 /dist
+/lib
 
 # Temp dirs
 tmp
