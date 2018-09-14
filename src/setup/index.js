@@ -19,6 +19,7 @@ import JSDocs from './JSDocs';
 import Babel from './Babel';
 import NVM from './NVM';
 import NPMIgnore from './NPMIgnore';
+import ProjectJSON from './ProjectJSON';
 
 const setupTemplates = {
   packagejson: PackageJSON,
@@ -40,6 +41,7 @@ const setupTemplates = {
   babel: Babel,
   nvm: NVM,
   npmignore: NPMIgnore,
+  projectjson: ProjectJSON,
 };
 
 export default setupTemplates;
