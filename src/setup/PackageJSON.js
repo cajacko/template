@@ -98,9 +98,10 @@ class PackageJSON extends SetupTemplate {
    * dependencies
    */
   setupFiles() {
-    const { includes } = this.templatesUsed;
-
-    if (includes('mobile-app') || includes('graphql')) {
+    if (
+      this.templatesUsed.includes('mobile-app') ||
+      this.templatesUsed.includes('graphql')
+    ) {
       return this.addLibDepsAsPeer();
     }
 

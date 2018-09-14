@@ -1,3 +1,5 @@
+// @flow
+
 import SetupTemplate from '../modules/SetupTemplate';
 import { MAX_LINE_LENGTH } from '../config/general';
 
@@ -21,7 +23,15 @@ const eslintConfig = {
       },
     ],
     'import/prefer-default-export': 'off',
-    'valid-jsdoc': 'error',
+    'valid-jsdoc': [
+      'error',
+      {
+        matchDescription: '.+',
+        requireParamDescription: true,
+        requireReturnDescription: true,
+        requireParamType: true,
+      },
+    ],
     'require-jsdoc': [
       'warn',
       {
