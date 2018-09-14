@@ -13,7 +13,8 @@
   },
   "files": [
     "dist/**/*",
-    "files/**/*"
+    "files/**/*",
+    "project.json"
   ],
   "main": "src/index.js",
   "repository": "git@github.com:cajacko/template.git",
