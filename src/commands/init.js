@@ -23,7 +23,7 @@ const init = () =>
       });
     }
 
-    return getLastLocalModuleVersion('@cajacko/template').then(([lastTemplateVersion]) =>
+    return getLastLocalModuleVersion('@cajacko/template').then(lastTemplateVersion =>
       getLastLocalModuleVersion('@cajacko/lib').then((lastLibVersion) => {
         const setupRunner = new SetupRunner(
           projectDir,
