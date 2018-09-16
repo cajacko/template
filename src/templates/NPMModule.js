@@ -25,8 +25,8 @@ class NPMModule extends Template {
         runCommand(
           `yarn run babel ${this.projectSrcDir} --out-dir ${
             this.babelOutDir
-          } -s --copy-files`,
-          this.tmpDir,
+          } -s --copy-files --presets=env,flow --plugins=transform-object-rest-spread`,
+          this.tmpDir
         ));
   }
 }

@@ -16,7 +16,7 @@
     "files/**/*",
     "project.json"
   ],
-  "main": "src/index.js",
+  "main": "dist/main.js",
   "repository": "git@github.com:cajacko/template.git",
   "author": "Charlie Jackson <contact@charliejackson.com>",
   "license": "MIT",
