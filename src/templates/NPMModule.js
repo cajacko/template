@@ -18,14 +18,27 @@ class NPMModule extends Template {
   }
 
   build() {
+    let command = `yarn run babel ${this.projectSrcDir} --out-dir ${this.babelOutDir} -s --copy-files --presets=env,flow --plugins=transform-object-rest-spread`;
+
+    if (this.templateConfig.babelIgnore) {
+      command = `${command} --ignore `;
+
+      this.templateConfig.babelIgnore.forEach((ignore, i) => {
+        if (i !== 0) {
+          command = `${command},`;
+        }
+
+        command = `${command}${ignore}`;
+      });
+    }
+
     return ensureDir(this.tmpDir)
       .then(() => copy(this.tmplDir, this.tmpDir))
       .then(this.installDependencies)
+      .then(() => copy(this.projectSrcDir, this.babelOutDir))
       .then(() =>
         runCommand(
-          `yarn run babel ${this.projectSrcDir} --out-dir ${
-            this.babelOutDir
-          } -s --copy-files --presets=env,flow --plugins=transform-object-rest-spread`,
+          command,
           this.tmpDir
         ));
   }
