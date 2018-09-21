@@ -1,5 +1,7 @@
 // @flow
 
+import { remove } from 'fs-extra';
+import { join } from 'path';
 import { getSettings, runCommand, logger } from '@cajacko/template-utils';
 
 let resolvePromise;
@@ -25,12 +27,19 @@ const watchLib = () => {
       const outDirOptions = getDirOptions(libOutDirs);
       const watchDirs = getDirOptions(libDirsToWatch);
 
-      return runCommand(`yarn build:lib ${outDirOptions}`, libPath)
-        .then(() => {
+      const buildAndWatchLib = () =>
+        runCommand(`yarn build:lib ${outDirOptions}`, libPath).then(() => {
           if (watchDirs !== '') {
             runCommand(`yarn watch:lib ${watchDirs}`, libPath);
           }
-        })
+        });
+
+      const reinstallLibNodeModules = () =>
+        remove(join(libPath, 'node_modules')).then(() =>
+          runCommand('yarn install', libPath, { noLog: true }));
+
+      return buildAndWatchLib()
+        .catch(() => reinstallLibNodeModules().then(buildAndWatchLib))
         .catch((e) => {
           logger.error(`Failed to compile the lib module at "${libPath}". Sometimes if you remove node_modules and run yarn again inside this dir. It will work.`);
           throw e;
