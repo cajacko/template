@@ -97,10 +97,17 @@ const eslintConfig = {
   },
 };
 
+/**
+ * Setup eslint for the project
+ */
 class Eslint extends SetupTemplate {
+  /**
+   * During the setup files step, write the esling config and add the packages
+   * needed for ide's to run it
+   *
+   * @return {Promise} Promise that resolved when everything has been added
+   */
   setupFiles() {
-    // TODO: run on test script
-
     const promises = [];
 
     promises.push(this.fs.writeJSON(eslintConfig, '.eslintrc'));

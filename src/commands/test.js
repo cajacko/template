@@ -3,6 +3,7 @@
 import { getProjectDir } from '@cajacko/template-utils';
 import initVersion from '../tests/initVersion';
 import eslint from '../tests/eslint';
+import flow from '../tests/flow';
 
 /**
  * Run the test suite
@@ -14,6 +15,8 @@ import eslint from '../tests/eslint';
  */
 const test = (commander, projectConfig) =>
   getProjectDir().then(projectDir =>
-    initVersion(projectConfig).then(() => eslint(projectDir)));
+    initVersion(projectConfig)
+      .then(() => eslint(projectDir))
+      .then(() => flow(projectDir)));
 
 export default test;
