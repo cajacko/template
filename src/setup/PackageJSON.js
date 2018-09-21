@@ -19,6 +19,7 @@ const projectJSON = {
     upgrade: 'template upgrade',
     postinstall: 'template postinstall',
     precommit: 'template precommit',
+    commitmsg: 'commit --validate-commit -u',
     prepare: 'template prepare',
   },
 };

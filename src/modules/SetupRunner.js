@@ -44,6 +44,10 @@ class SetupRunner extends StepRunner {
       });
     }
 
+    this.npm.add({
+      '@cajacko/commit': { version: '0.2.0' },
+    });
+
     this.fs = new QueuedFileManagement(
       join(__dirname, '../../files'),
       projectDir

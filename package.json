@@ -9,7 +9,8 @@
     "build": "babel src --out-dir dist -s --copy-files",
     "watch": "yarn build --watch",
     "prepare": "yarn build",
-    "babel": "babel"
+    "babel": "babel",
+    "commitmsg": "commit --validate-commit -u"
   },
   "files": [
     "dist/**/*",
@@ -48,6 +49,7 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.0.0",
+    "@cajacko/commit": "0.2.0",
     "@cajacko/template-utils": "https://github.com/cajacko/template-utils.git#v0.8.0",
     "babel-cli": "^6.26.0",
     "babel-eslint": "8.2.2",
