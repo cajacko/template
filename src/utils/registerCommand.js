@@ -16,6 +16,28 @@ import buildLib from './buildLib';
 import unlinkLibs from './unlinkLibs';
 
 /**
+ * Finish the script, if an error is supplied will exit with an error status
+ * code
+ *
+ * @param {Error} e Optional error
+ *
+ * @return {Void} No return value
+ */
+const finish = (e) => {
+  killAllCommands();
+
+  if (e) {
+    if (e instanceof Error) {
+      logger.error(e);
+    }
+
+    process.exit(1);
+  }
+
+  process.exit(0);
+};
+
+/**
  * Register a command that can be used via cli. Pass in the callback and some
  * optional options.
  *
@@ -67,7 +89,8 @@ const registerCommand = (command, callback, configArg) => {
             const runAndSkip = () => {
               const fullCommand = `${process.argv.join(' ')} ${SKIP_OPTION}`;
 
-              return runCommand(fullCommand, projectDir);
+              return runCommand(fullCommand, projectDir).catch(() =>
+                finish(true));
             };
 
             if (env.USE_LOCAL_LIBS || env.NO_ENV_FILE) {
@@ -91,17 +114,9 @@ const registerCommand = (command, callback, configArg) => {
 
             return unlinkLibs().then(runAndSkip);
           }))
-        .catch(e => e)
-        .then((e) => {
-          killAllCommands();
-
-          if (e instanceof Error) {
-            logger.error(e);
-          }
-
-          process.exit(0);
-        }),
-    { options: [[SKIP_OPTION], ...options] }
+        .then(() => finish()),
+    { options: [[SKIP_OPTION], ...options] },
+    finish
   );
 };
 
