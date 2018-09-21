@@ -76,6 +76,15 @@ const eslintConfig = {
     ],
     'class-methods-use-this': 'off',
   },
+  overrides: [
+    {
+      files: ['**/__mocks__/**/*', '**/__tests__/**/*'],
+      rules: {
+        'require-jsdoc': 'off',
+        'flowtype/require-valid-file-annotation': 'off',
+      },
+    },
+  ],
   settings: {
     'import/resolver': {
       node: {
