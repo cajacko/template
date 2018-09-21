@@ -38,7 +38,9 @@ const updatePackage = (
           ).then(() =>
             git.commit(
               updatePackageWithNewVersionDir,
-              `Upgraded ${packageName} lib to v${version}`
+              `Upgraded ${packageName} lib to v${version}`,
+              true,
+              true
             ));
         }));
   });
