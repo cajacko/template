@@ -26,6 +26,19 @@ class Jest extends SetupTemplate {
       modulePathIgnorePatterns: ['<rootDir>/tmp'],
     };
 
+    this.runner.vscode.launch.configurations.push({
+      type: 'node',
+      name: 'vscode-jest-tests',
+      request: 'launch',
+      args: ['--runInBand'],
+      // eslint-disable-next-line no-template-curly-in-string
+      cwd: '${workspaceFolder}',
+      console: 'integratedTerminal',
+      internalConsoleOptions: 'neverOpen',
+      // eslint-disable-next-line no-template-curly-in-string
+      program: '${workspaceFolder}/node_modules/jest/bin/jest',
+    });
+
     return Promise.all(promises);
   }
 }
