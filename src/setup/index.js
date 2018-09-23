@@ -17,7 +17,6 @@ import GitAttributes from './GitAttributes';
 import Changelog from './Changelog';
 import JSDocs from './JSDocs';
 import Babel from './Babel';
-import NVM from './NVM';
 import NPMIgnore from './NPMIgnore';
 import ProjectJSON from './ProjectJSON';
 
@@ -39,7 +38,6 @@ const setupTemplates = {
   changelog: Changelog,
   jsdocs: JSDocs,
   babel: Babel,
-  nvm: NVM,
   npmignore: NPMIgnore,
   projectjson: ProjectJSON,
 };
