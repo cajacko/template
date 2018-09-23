@@ -19,9 +19,11 @@ class Jest extends SetupTemplate {
     }));
 
     this.runner.packagejson.packageJSON.jest = {
-      collectCoverage: true,
       collectCoverageFrom: ['src/**/*.js'],
-      testMatch: ['<rootDir>/src/**/__tests__/**/*.js'],
+      testMatch: [
+        '<rootDir>/src/**/__tests__/**/*.js',
+        '<rootDir>/features/**/*.test.js',
+      ],
       testPathIgnorePatterns: ['<rootDir>/node_modules', '<rootDir>/tmp'],
       modulePathIgnorePatterns: ['<rootDir>/tmp'],
     };
@@ -30,7 +32,20 @@ class Jest extends SetupTemplate {
       type: 'node',
       name: 'vscode-jest-tests',
       request: 'launch',
-      args: ['--runInBand'],
+      args: ['src', '--runInBand', '--coverage'],
+      // eslint-disable-next-line no-template-curly-in-string
+      cwd: '${workspaceFolder}',
+      console: 'integratedTerminal',
+      internalConsoleOptions: 'neverOpen',
+      // eslint-disable-next-line no-template-curly-in-string
+      program: '${workspaceFolder}/node_modules/jest/bin/jest',
+    });
+
+    this.runner.vscode.launch.configurations.push({
+      type: 'node',
+      name: 'vscode-jest-tests',
+      request: 'launch',
+      args: ['features', '--runInBand'],
       // eslint-disable-next-line no-template-curly-in-string
       cwd: '${workspaceFolder}',
       console: 'integratedTerminal',

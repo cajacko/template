@@ -78,7 +78,7 @@ const eslintConfig = {
   },
   overrides: [
     {
-      files: ['**/__mocks__/**/*', '**/__tests__/**/*'],
+      files: ['**/__mocks__/**/*', '**/__tests__/**/*', '**/*.test.js'],
       rules: {
         'require-jsdoc': 'off',
         'flowtype/require-valid-file-annotation': 'off',
