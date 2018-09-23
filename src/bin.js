@@ -21,12 +21,16 @@ const runOptions = [
   ['-r, --reset'],
 ];
 
+registerCommand('init', init);
+
 registerCommand('start', start, {
   options: runOptions,
 });
 
-registerCommand('init', init);
-registerCommand('test', test);
+registerCommand('test', test, {
+  options: [['-i, --interactive'], ['-t, --type [type]']],
+});
+
 registerCommand('build', build);
 
 registerCommand('deploy', deploy, {
