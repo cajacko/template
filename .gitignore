@@ -1,3 +1,5 @@
+# -- THIS FILE IS AUTO GENERATED. YOU CAN ADD CUSTOM ENTRIES AT THE BOTTOM --
+
 # npm stuff
 node_modules
 
@@ -27,3 +29,7 @@ src/constants/**/*.css
 /coverage
 /docs
 *.log
+
+# -- ADD CUSTOM ENTRIES BELOW THIS HEADER
+# Project Specific
+

@@ -12,5 +12,6 @@
     "main-package": {
       "type": "npm-module"
     }
-  }
+  },
+  "templateInitVersion": "0.15.0"
 }

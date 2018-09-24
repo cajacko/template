@@ -28,7 +28,14 @@
       }
     ],
     "import/prefer-default-export": "off",
-    "valid-jsdoc": "error",
+    "valid-jsdoc": [
+      "error",
+      {
+        "matchDescription": ".+",
+        "requireParamDescription": true,
+        "requireReturnDescription": true
+      }
+    ],
     "require-jsdoc": [
       "warn",
       {
@@ -71,12 +78,42 @@
       {
         "extensions": [
           ".js",
-          ".jsx"
+          ".native.js",
+          ".web.js",
+          ".ios.js",
+          ".android.js"
         ]
       }
     ],
     "class-methods-use-this": "off"
   },
+  "overrides": [
+    {
+      "files": [
+        "**/__mocks__/**/*",
+        "**/__tests__/**/*",
+        "**/*.test.js"
+      ],
+      "rules": {
+        "require-jsdoc": "off",
+        "flowtype/require-valid-file-annotation": "off"
+      }
+    }
+  ],
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [
+          ".js",
+          ".native.js",
+          ".web.js",
+          ".ios.js",
+          ".android.js"
+        ]
+      }
+    }
+  },
+  "parser": "babel-eslint",
   "plugins": [
     "jest",
     "flowtype"
@@ -88,6 +125,7 @@
     "fetch": false,
     "document": false,
     "window": false,
-    "Image": false
+    "Image": false,
+    "logger": false
   }
 }
