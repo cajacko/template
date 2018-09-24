@@ -6,6 +6,7 @@
     "template": "dist/bin.js"
   },
   "scripts": {
+    "init": "node dist/bin.js init",
     "build": "babel src --out-dir dist -s --copy-files",
     "watch": "yarn build --watch",
     "prepare": "yarn build",
@@ -60,6 +61,7 @@
     "commander": "^2.16.0",
     "ejs": "^2.6.1",
     "fs-extra": "^6.0.1",
+    "globby": "^8.0.1",
     "inquirer": "^6.0.0",
     "is-git-repository": "^1.1.1",
     "is-symlink": "^1.0.0",

@@ -1,8 +1,6 @@
 // @flow
 
-// @flow
-
-import { runCommand } from '@cajacko/template-utils';
+import runJest from '../utils/runJest';
 
 /**
  * Run jest func tests in the project
@@ -12,6 +10,6 @@ import { runCommand } from '@cajacko/template-utils';
  * @return {Promise} Promise that resolves if jest passes
  */
 const unit = projectDir =>
-  runCommand('node node_modules/.bin/jest features', projectDir);
+  runJest('features', 'node node_modules/.bin/jest features', projectDir);
 
 export default unit;
