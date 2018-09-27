@@ -1,4 +1,4 @@
-package com.cajackoexample;
+package com.template;
 
 import android.app.Application;
 
