@@ -341,8 +341,8 @@ class MobileApp extends Template {
    */
   reset() {
     return Promise.all([
-      runCommand('watchman watch-del-all', this.tmpDir),
-      runCommand('rm -rf /tmp/metro-bundler-cache-*', this.tmpDir),
+      runCommand('watchman watch-del-all'),
+      runCommand('rm -rf /tmp/metro-bundler-cache-*'),
     ]);
   }
 
