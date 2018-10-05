@@ -79,6 +79,11 @@ class MobileApp extends Template {
     });
   }
 
+  /**
+   * Set the required details in the package.json file
+   *
+   * @return {Promise} Promise that resolves when the file has been set
+   */
   setPackageJSON() {
     const packageJSONPath = join(this.tmpDir, 'package.json');
 
@@ -91,6 +96,11 @@ class MobileApp extends Template {
     });
   }
 
+  /**
+   * Copy the src file to tmp and watch if required
+   *
+   * @return {Promise} Promise that resolves when the copy has finished
+   */
   copyOrWatchSrc() {
     const tmpSrc = join(this.tmpDir, 'src');
 
@@ -101,6 +111,12 @@ class MobileApp extends Template {
     return copy(this.projectSrcDir, tmpSrc);
   }
 
+  /**
+   * Prepare the mobile app. Copies all the required files into tmp and watches
+   * anything that needs watching
+   *
+   * @return {Promise} Promise that resolves when the mobile app dir is ready
+   */
   prepare() {
     logger.debug('MobileApp - prepare');
 
@@ -138,6 +154,14 @@ class MobileApp extends Template {
       });
   }
 
+  /**
+   * Find and replace a regex inside the ios and android files
+   *
+   * @param {String} regex The regex to find
+   * @param {String} replacement What to replace it with
+   *
+   * @return {Void} No return value (is sync func)
+   */
   replace(regex, replacement) {
     replace({
       regex,
@@ -148,6 +172,11 @@ class MobileApp extends Template {
     });
   }
 
+  /**
+   * Ask what env to deploy to
+   *
+   * @return {Promise} Resolves with the env to deploy to
+   */
   prompt() {
     return ask({
       type: 'list',
@@ -155,9 +184,21 @@ class MobileApp extends Template {
     });
   }
 
+  /**
+   * Prepare the tmp dir and then run each command passed as an arg
+   *
+   * @param  {...any} commands Each command to run in order
+   *
+   * @return {Promise} Promise that resolves when all the commands have been run
+   */
   prepareAndRun(...commands) {
     let i = 0;
 
+    /**
+     * Loop through each command and run it
+     *
+     * @return {Promise} Promise that resolves when all commands have been run
+     */
     const runCommands = () => {
       const command = commands[i];
       i += 1;
@@ -170,6 +211,11 @@ class MobileApp extends Template {
     return this.prepare().then(runCommands);
   }
 
+  /**
+   * Deploy the app to the desired env
+   *
+   * @return {Promise} Resolves when the deploy has completed
+   */
   deploy() {
     Object.keys(MOBILE_APP).forEach((envKey) => {
       if (!this.env[envKey]) {
@@ -180,6 +226,11 @@ class MobileApp extends Template {
     return this.prompt().then(deploy => this.deployFuncs[deploy]());
   }
 
+  /**
+   * Deploy to expo
+   *
+   * @return {Promise} Resolves when the deploy has completed
+   */
   deployExpo() {
     const { EXPO_USERNAME, EXPO_PASSWORD } = this.env;
 
@@ -190,6 +241,11 @@ class MobileApp extends Template {
     );
   }
 
+  /**
+   * Run the expo build
+   *
+   * @return {Promise} Resolves when the build has finished
+   */
   expoBuild() {
     let onReadyToBuild;
     let onFinishedBuild;
@@ -247,6 +303,11 @@ class MobileApp extends Template {
     return { readyToBuild, postBuild };
   }
 
+  /**
+   * Deploy to the local machine
+   *
+   * @return {Promise} Resolves when the deploy has completed
+   */
   deployToLocal() {
     const { readyToBuild, postBuild } = this.expoBuild();
 
@@ -262,6 +323,11 @@ class MobileApp extends Template {
       });
   }
 
+  /**
+   * Stop any existing metro process on port 8081
+   *
+   * @return {Promise} Resolves when the process has been reset
+   */
   resetPackager() {
     execSync('lsof -ti:8081 | xargs kill');
 
@@ -280,6 +346,11 @@ class MobileApp extends Template {
     ]);
   }
 
+  /**
+   * Start the mobile app
+   *
+   * @return {Promise} Resolves when the initial build has finished
+   */
   start() {
     return this.resetPackager()
       .then(this.prepare)
