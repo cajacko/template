@@ -48,7 +48,7 @@ class MobileApp extends Template {
       live: this.deployExpo,
     };
 
-    this.prepare = this.prepare.bind(this);
+    this.prepareApp = this.prepareApp.bind(this);
   }
 
   /**
@@ -117,7 +117,7 @@ class MobileApp extends Template {
    *
    * @return {Promise} Promise that resolves when the mobile app dir is ready
    */
-  prepare() {
+  prepareApp() {
     logger.debug('MobileApp - prepare');
 
     return Promise.all([
@@ -208,7 +208,7 @@ class MobileApp extends Template {
       return runCommand(command, this.tmpDir).then(() => runCommands());
     };
 
-    return this.prepare().then(runCommands);
+    return this.prepareApp().then(runCommands);
   }
 
   /**
@@ -311,7 +311,7 @@ class MobileApp extends Template {
   deployToLocal() {
     const { readyToBuild, postBuild } = this.expoBuild();
 
-    return this.prepare()
+    return this.prepareApp()
       .then(() => readyToBuild)
       .then(() =>
         Promise.all([
@@ -353,7 +353,7 @@ class MobileApp extends Template {
    */
   start() {
     return this.resetPackager()
-      .then(this.prepare)
+      .then(this.prepareApp)
       .then(() => {
         logger.debug('start');
 
