@@ -1,6 +1,9 @@
 #! /usr/bin/env node
 
 // @flow
+// Ignoring import/first as we need to ensure the logger is loaded before
+// anything else has loaded
+/* eslint import/first: 0 */
 
 import '@babel/polyfill';
 import './utils/loadLogger';
@@ -9,10 +12,7 @@ import registerCommand from './utils/registerCommand';
 import upgrade from './commands/upgrade';
 import init from './commands/init';
 import test from './commands/test';
-import deploy from './commands/deploy';
-import start from './commands/start';
-import build from './commands/build';
-import prepare from './commands/prepare';
+import runBasicCommand from './utils/runBasicCommand';
 
 const runOptions = [
   ['-i, --interactive'],
@@ -23,7 +23,7 @@ const runOptions = [
 
 registerCommand('init', init);
 
-registerCommand('start', start, {
+registerCommand('start', runBasicCommand('start'), {
   options: runOptions,
 });
 
@@ -31,9 +31,9 @@ registerCommand('test', test, {
   options: [['-i, --interactive'], ['-t, --type [type]']],
 });
 
-registerCommand('build', build);
+registerCommand('build', runBasicCommand('build'));
 
-registerCommand('deploy', deploy, {
+registerCommand('deploy', runBasicCommand('deploy'), {
   options: runOptions,
 });
 
@@ -42,6 +42,6 @@ registerCommand('upgrade', upgrade);
 registerCommand('postinstall', () => {}, { ignoreUnlink: true });
 
 registerCommand('precommit', () => {});
-registerCommand('prepare', prepare);
+registerCommand('prepare', runBasicCommand('prepare'));
 
 processCommands(process.argv);

@@ -8,12 +8,24 @@ import {
   copyDependencies,
   ask,
 } from '@cajacko/template-utils';
+import replace from 'replace';
+import { execSync } from 'child_process';
 import Template from '../modules/Template';
 import { registerLibOutDir, setOutDirIsReady } from '../utils/libOutDirs';
 import copyAndWatch from '../utils/copyAndWatch';
 import { MOBILE_APP } from '../config/requiredEnv';
 
+/**
+ * Run commands for the mobile app template
+ */
 class MobileApp extends Template {
+  /**
+   * Setup the class, define some helper props
+   *
+   * @param  {...any} args Params to pass to base class
+   *
+   * @return {Void} No return value
+   */
   constructor(...args) {
     super(...args);
 
@@ -24,6 +36,10 @@ class MobileApp extends Template {
     this.deployExpo = this.deployExpo.bind(this);
     this.deployToLocal = this.deployToLocal.bind(this);
 
+    this.name = this.templateConfig.name || this.projectConfig.title;
+    this.displayName =
+      this.templateConfig.displayName || this.projectConfig.title || this.name;
+
     this.deployFuncs = {
       'dev-expo': this.deployExpo,
       'dev-local': this.deployToLocal,
@@ -31,38 +47,47 @@ class MobileApp extends Template {
       beta: this.deployExpo,
       live: this.deployExpo,
     };
+
+    this.prepare = this.prepare.bind(this);
   }
 
+  /**
+   * When the class initialises, decide whether to register the lib dir or not
+   *
+   * @return {Void} No return value
+   */
   init() {
     this.runIfUseLocal(() =>
       registerLibOutDir(this.libOutDir, this.shouldWatch));
   }
 
+  /**
+   * Set the app.json file
+   *
+   * @return {Promise} Promise that resolves when the file has been set
+   */
   setAppJSON() {
-    const splashIconPath = this.templateConfig.splashIcon;
-    const expoName = this.templateConfig.name || this.projectConfig.title;
-    const expoSlug = this.templateConfig.slug || this.projectConfig.slug;
-
-    if (!splashIconPath) return Promise.resolve();
-
     const appJSONPath = join(this.tmpDir, 'app.json');
 
     return readJSON(appJSONPath).then((contents) => {
       const appJSON = Object.assign({}, contents);
 
-      appJSON.expo.splash.image = `./${splashIconPath}`;
-      appJSON.expo.name = expoName;
-      appJSON.expo.slug = expoSlug;
-      appJSON.expo.icon = `./${this.templateConfig.icon}`;
-      appJSON.expo.version = this.projectConfig.version;
-
-      if (!appJSON.expo.ios) appJSON.expo.ios = {};
-      if (!appJSON.expo.android) appJSON.expo.android = {};
-
-      appJSON.expo.ios.bundleIdentifier = this.env.BUNDLE_ID;
-      appJSON.expo.android.package = this.env.BUNDLE_ID;
+      appJSON.name = this.name;
+      appJSON.displayName = this.displayName;
 
       return writeJSON(appJSONPath, appJSON, { spaces: 2 });
+    });
+  }
+
+  setPackageJSON() {
+    const packageJSONPath = join(this.tmpDir, 'package.json');
+
+    return readJSON(packageJSONPath).then((contents) => {
+      const packageJSON = Object.assign({}, contents);
+
+      packageJSON.name = this.name;
+
+      return writeJSON(packageJSONPath, packageJSON, { spaces: 2 });
     });
   }
 
@@ -77,29 +102,50 @@ class MobileApp extends Template {
   }
 
   prepare() {
+    logger.debug('MobileApp - prepare');
+
     return Promise.all([
       this.getActiveLibDir(),
-      ensureDir(this.tmpDir)
-        .then(() => copy(this.tmplSrcDir, this.tmpDir))
-        .then(() =>
+      ensureDir(this.tmpDir).then(() =>
+        copy(this.tmplSrcDir, this.tmpDir).then(() =>
           copyDependencies(this.projectDir, this.tmpDir, {
-            ignore: ['@cajacko/template'],
-          })),
-    ]).then(([localLibPath]) =>
-      copyDependencies(localLibPath, this.tmpDir, {
-        ignore: ['@cajacko/template'],
-      }).then(() =>
+            ignore: ['@cajacko/template', '@cajacko/commit'],
+          }))),
+    ])
+      .then(([localLibPath]) =>
+        copyDependencies(localLibPath, this.tmpDir, {
+          ignore: ['@cajacko/template', '@cajacko/commit'],
+        }))
+      .then(() =>
         Promise.all([
           this.installDependencies().then(() =>
             this.runIfUseLocal(() => setOutDirIsReady(this.libOutDir))),
+          // this.runIfUseLocal(() => setOutDirIsReady(this.libOutDir)),
           this.copyOrWatchSrc(),
           copyTmpl(
             join(this.tmplDir, 'config.js'),
             join(this.tmpDir, 'config.js'),
-            this.templateConfig,
+            this.templateConfig
           ),
           this.setAppJSON(),
-        ])));
+          this.setPackageJSON(),
+        ]))
+      .then(() => {
+        this.replace('TEMPLATE_DISPLAY_NAME', this.displayName);
+        this.replace('TEMPLATE-BUNDLE-ID', this.env.BUNDLE_ID);
+
+        logger.debug('MobileApp - prepare finished');
+      });
+  }
+
+  replace(regex, replacement) {
+    replace({
+      regex,
+      replacement,
+      paths: [join(this.tmpDir, 'ios'), join(this.tmpDir, 'android')],
+      recursive: true,
+      silent: true,
+    });
   }
 
   prompt() {
@@ -140,7 +186,7 @@ class MobileApp extends Template {
     return this.prepareAndRun(
       'yarn exp logout',
       `yarn exp login -u ${EXPO_USERNAME} -p ${EXPO_PASSWORD}`,
-      'yarn exp publish --non-interactive',
+      'yarn exp publish --non-interactive'
     );
   }
 
@@ -216,8 +262,42 @@ class MobileApp extends Template {
       });
   }
 
+  resetPackager() {
+    execSync('lsof -ti:8081 | xargs kill');
+
+    return Promise.resolve();
+  }
+
+  /**
+   * Reset everything to do with running the mobile app
+   *
+   * @return {Promise} Promise that resolves when everything has been reset
+   */
+  reset() {
+    return Promise.all([
+      runCommand('watchman watch-del-all', this.tmpDir),
+      runCommand('rm -rf /tmp/metro-bundler-cache-*', this.tmpDir),
+    ]);
+  }
+
   start() {
-    return this.prepareAndRun('yarn run start');
+    return this.resetPackager()
+      .then(this.prepare)
+      .then(() => {
+        logger.debug('start');
+
+        return Promise.all([
+          runCommand('yarn run start', this.tmpDir),
+          runCommand('react-native run-ios', this.tmpDir, {
+            noLog: true,
+          }).then(() => {
+            logger.debug('Build finished');
+          }),
+        ]);
+      })
+      .then(() => {
+        logger.debug('start finished');
+      });
   }
 }
 

@@ -44,6 +44,8 @@ class Template {
     this.installDependencies = this.installDependencies.bind(this);
   }
 
+  tmpDir: string;
+
   /**
    * Install the dependencies for the template
    *
