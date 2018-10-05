@@ -6,6 +6,8 @@ import type {
   ProjectConfig,
   Env,
 } from '@cajacko/template-utils/lib/types';
+import { join } from 'path';
+import { remove } from 'fs-extra';
 import templates from '../templates';
 import type { Command, TemplateKeys } from '../types';
 
@@ -115,7 +117,7 @@ class TemplateRunner {
   reset(templateKeys: TemplateKeys) {
     return Promise.all([
       this.runCommandInEachTemplate(templateKeys, 'reset'),
-      // remove(join(this.projectDir, 'tmp')),
+      remove(join(this.projectDir, 'tmp')),
     ]);
   }
 
