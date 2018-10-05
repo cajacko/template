@@ -14,6 +14,7 @@ import isProjectDirLinked from './isProjectDirLinked';
 import { NPM_NAMESPACE, SKIP_OPTION } from '../config/general';
 import buildLib from './buildLib';
 import unlinkLibs from './unlinkLibs';
+import isAuthor from './isAuthor';
 
 /**
  * Finish the script, if an error is supplied will exit with an error status
@@ -93,7 +94,7 @@ const registerCommand = (command, callback, configArg) => {
                 finish(true));
             };
 
-            if (env.USE_LOCAL_LIBS || env.NO_ENV_FILE) {
+            if (env.USE_LOCAL_LIBS || (env.NO_ENV_FILE && isAuthor())) {
               if (isLinked === true) {
                 return buildLib(env.NO_ENV_FILE).then(runAndSkip);
               }
