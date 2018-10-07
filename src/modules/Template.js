@@ -2,6 +2,7 @@
 
 import { join } from 'path';
 import { runCommand, getSettings, logger } from '@cajacko/template-utils';
+import type { TemplateConfig } from '../types';
 
 let installID = 0;
 
@@ -44,7 +45,9 @@ class Template {
     this.installDependencies = this.installDependencies.bind(this);
   }
 
+  projectDir: string;
   tmpDir: string;
+  templateConfig: TemplateConfig;
 
   /**
    * Install the dependencies for the template

@@ -2,11 +2,14 @@
 
 import { join } from 'path';
 import { ensureDir, copy, readJSON, writeJSON } from 'fs-extra';
+import Color from 'color';
 import {
   runCommand,
   copyTmpl,
   copyDependencies,
   ask,
+  replaceInFile,
+  resizeImageAndCopyTo,
 } from '@cajacko/template-utils';
 import replace from 'replace';
 import { execSync } from 'child_process';
@@ -14,6 +17,7 @@ import Template from '../modules/Template';
 import { registerLibOutDir, setOutDirIsReady } from '../utils/libOutDirs';
 import copyAndWatch from '../utils/copyAndWatch';
 import { MOBILE_APP } from '../config/requiredEnv';
+import type { MobileAppTemplateConfig } from '../types';
 
 /**
  * Run commands for the mobile app template
@@ -50,6 +54,8 @@ class MobileApp extends Template {
 
     this.prepareApp = this.prepareApp.bind(this);
   }
+
+  templateConfig: MobileAppTemplateConfig;
 
   /**
    * When the class initialises, decide whether to register the lib dir or not
@@ -94,6 +100,68 @@ class MobileApp extends Template {
 
       return writeJSON(packageJSONPath, packageJSON, { spaces: 2 });
     });
+  }
+
+  /**
+   * Set the splash screen
+   *
+   * @return {Promise} Resolves when the splash screen has been set
+   */
+  setSplash() {
+    // Copy icon to the 3 separate sizes and locations
+
+    const promises = [];
+
+    const { splashBackgroundColor, splashIcon } = this.templateConfig;
+
+    if (splashBackgroundColor) {
+      const color = Color(splashBackgroundColor);
+
+      const [red, green, blue] = color
+        .rgb()
+        .array()
+        .map(val => val / 255);
+
+      promises.push(replaceInFile(
+        join(this.tmpDir, 'ios/template/Base.lproj/LaunchScreen.xib'),
+        { regex: 'TEMPLATE_RED', replacement: red },
+        { regex: 'TEMPLATE_GREEN', replacement: green },
+        { regex: 'TEMPLATE_BLUE', replacement: blue }
+      ));
+    } else {
+      throw new Error('No splashBackgroundColor set in template config');
+    }
+
+    if (splashIcon) {
+      /**
+       * Helper to get the height, width and path for the resized images
+       *
+       * @param {String} name The file name to set
+       * @param {Number} size The height and width to set
+       *
+       * @return {Object} The config for the resize
+       */
+      const getImageConfig = (name, size) => ({
+        width: size,
+        height: size,
+        outPath: join(
+          this.tmpDir,
+          'ios/template/Images.xcassets/SplashIcon.imageset',
+          name
+        ),
+      });
+
+      promises.push(resizeImageAndCopyTo(
+        join(this.projectDir, splashIcon),
+        getImageConfig('icon.png', 200),
+        getImageConfig('icon@2x.png', 400),
+        getImageConfig('icon@3x.png', 600)
+      ));
+    } else {
+      throw new Error('No splashIcon set in template config');
+    }
+
+    return Promise.all(promises);
   }
 
   /**
@@ -145,6 +213,7 @@ class MobileApp extends Template {
           ),
           this.setAppJSON(),
           this.setPackageJSON(),
+          this.setSplash(),
         ]))
       .then(() => {
         this.replace('TEMPLATE_DISPLAY_NAME', this.displayName);

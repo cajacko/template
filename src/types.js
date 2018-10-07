@@ -17,3 +17,10 @@ export type Command = $Keys<typeof commands>;
 
 export type TemplateKey = $Keys<typeof templates>;
 export type TemplateKeys = Array<TemplateKey>;
+
+export type MobileAppTemplateConfig = {
+  splashBackgroundColor: string,
+  splashIcon: string,
+};
+
+export type TemplateConfig = MobileAppTemplateConfig;
