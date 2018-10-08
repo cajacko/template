@@ -33,6 +33,9 @@ class MobileApp extends Template {
   constructor(...args) {
     super(...args);
 
+    this.ios = !!this.commander.ios;
+    this.android = !!this.commander.android;
+
     this.tmplDir = join(this.filesDir, 'mobile');
     this.tmplSrcDir = join(this.tmplDir, 'src');
     this.libOutDir = join(this.tmpDir, 'node_modules/@cajacko/lib');
@@ -53,9 +56,12 @@ class MobileApp extends Template {
     };
 
     this.prepareApp = this.prepareApp.bind(this);
+    this.startAndroid = this.startAndroid.bind(this);
   }
 
   templateConfig: MobileAppTemplateConfig;
+  ios: boolean;
+  android: boolean;
 
   /**
    * When the class initialises, decide whether to register the lib dir or not
@@ -481,14 +487,33 @@ class MobileApp extends Template {
       .then(() => {
         logger.debug('start');
 
-        return Promise.all([
-          runCommand('yarn run start', this.tmpDir),
-          runCommand('react-native run-ios', this.tmpDir, {
+        const promises = [runCommand('yarn run start', this.tmpDir)];
+
+        if (!this.ios && !this.android) {
+          throw new Error('You must specify ios and/or android');
+        }
+
+        if (this.ios) {
+          logger.debug('ios build started');
+
+          promises.push(runCommand('react-native run-ios', this.tmpDir, {
             noLog: true,
           }).then(() => {
-            logger.debug('Build finished');
-          }),
-        ]);
+            logger.debug('ios build finished');
+          }));
+        }
+
+        if (this.android) {
+          logger.debug('android build started');
+
+          promises.push(runCommand('react-native run-android', this.tmpDir, {
+            noLog: true,
+          }).then(() => {
+            logger.debug('android build started');
+          }));
+        }
+
+        return Promise.all(promises);
       })
       .then(() => {
         logger.debug('start finished');

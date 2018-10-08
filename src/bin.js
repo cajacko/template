@@ -19,6 +19,8 @@ const runOptions = [
   ['-t, --template [type]'],
   ['-o, --offline'],
   ['-r, --reset'],
+  ['--ios'],
+  ['--android'],
 ];
 
 registerCommand('init', init);
