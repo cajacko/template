@@ -132,7 +132,7 @@ class MobileApp extends Template {
      *
      * @return {Object} The config for the resize
      */
-    const getImageConfig = (name, size) => ({
+    const getIOSImageConfig = (name, size) => ({
       width: size,
       height: size,
       outPath: join(
@@ -142,30 +142,65 @@ class MobileApp extends Template {
       ),
     });
 
-    return resizeImageAndCopyTo(
-      join(this.projectDir, icon),
-      getImageConfig('Icon-App-20x20@1x', 20),
-      getImageConfig('Icon-App-20x20@2x', 40),
-      getImageConfig('Icon-App-20x20@3x', 60),
-      getImageConfig('Icon-App-29x29@1x', 29),
-      getImageConfig('Icon-App-29x29@2x', 58),
-      getImageConfig('Icon-App-29x29@3x', 87),
-      getImageConfig('Icon-App-40x40@1x', 40),
-      getImageConfig('Icon-App-40x40@2x', 80),
-      getImageConfig('Icon-App-40x40@3x', 120),
-      getImageConfig('Icon-App-57x57@1x', 57),
-      getImageConfig('Icon-App-57x57@2x', 114),
-      getImageConfig('Icon-App-60x60@2x', 120),
-      getImageConfig('Icon-App-60x60@3x', 180),
-      getImageConfig('Icon-App-72x72@1x', 72),
-      getImageConfig('Icon-App-72x72@2x', 144),
-      getImageConfig('Icon-App-76x76@1x', 76),
-      getImageConfig('Icon-App-76x76@2x', 152),
-      getImageConfig('Icon-App-83.5x83.5@2x', 167),
-      getImageConfig('Icon-Small-50x50@1x', 50),
-      getImageConfig('Icon-Small-50x50@2x', 100),
-      getImageConfig('ItunesArtwork@2x', 1024)
-    );
+    /**
+     * Helper to get the height, width and path for the resized images
+     *
+     * @param {String} name The file name to set
+     * @param {Number} size The height and width to set
+     * @param {Boolean} [isRound] Is the image the round version
+     *
+     * @return {Object} The config for the resize
+     */
+    const getAndroidImageConfig = (name, size, isRound) => ({
+      width: size,
+      height: size,
+      outPath: join(
+        this.tmpDir,
+        'android/app/src/main/res',
+        name,
+        isRound ? 'ic_launcher.png' : 'ic_launcher_round.png'
+      ),
+    });
+
+    return Promise.all([
+      resizeImageAndCopyTo(
+        join(this.projectDir, icon),
+        getIOSImageConfig('Icon-App-20x20@1x', 20),
+        getIOSImageConfig('Icon-App-20x20@2x', 40),
+        getIOSImageConfig('Icon-App-20x20@3x', 60),
+        getIOSImageConfig('Icon-App-29x29@1x', 29),
+        getIOSImageConfig('Icon-App-29x29@2x', 58),
+        getIOSImageConfig('Icon-App-29x29@3x', 87),
+        getIOSImageConfig('Icon-App-40x40@1x', 40),
+        getIOSImageConfig('Icon-App-40x40@2x', 80),
+        getIOSImageConfig('Icon-App-40x40@3x', 120),
+        getIOSImageConfig('Icon-App-57x57@1x', 57),
+        getIOSImageConfig('Icon-App-57x57@2x', 114),
+        getIOSImageConfig('Icon-App-60x60@2x', 120),
+        getIOSImageConfig('Icon-App-60x60@3x', 180),
+        getIOSImageConfig('Icon-App-72x72@1x', 72),
+        getIOSImageConfig('Icon-App-72x72@2x', 144),
+        getIOSImageConfig('Icon-App-76x76@1x', 76),
+        getIOSImageConfig('Icon-App-76x76@2x', 152),
+        getIOSImageConfig('Icon-App-83.5x83.5@2x', 167),
+        getIOSImageConfig('Icon-Small-50x50@1x', 50),
+        getIOSImageConfig('Icon-Small-50x50@2x', 100),
+        getIOSImageConfig('ItunesArtwork@2x', 1024)
+      ),
+      resizeImageAndCopyTo(
+        join(this.projectDir, icon),
+        getAndroidImageConfig('mipmap-hdpi', 72),
+        getAndroidImageConfig('mipmap-mdpi', 48),
+        getAndroidImageConfig('mipmap-xhdpi', 96),
+        getAndroidImageConfig('mipmap-xxhdpi', 144),
+        getAndroidImageConfig('mipmap-xxxhdpi', 192),
+        getAndroidImageConfig('mipmap-hdpi', 72, true),
+        getAndroidImageConfig('mipmap-mdpi', 48, true),
+        getAndroidImageConfig('mipmap-xhdpi', 96, true),
+        getAndroidImageConfig('mipmap-xxhdpi', 144, true),
+        getAndroidImageConfig('mipmap-xxxhdpi', 192, true),
+      ),
+    ]);
   }
 
   /**
@@ -205,7 +240,7 @@ class MobileApp extends Template {
        *
        * @return {Object} The config for the resize
        */
-      const getImageConfig = (name, size) => ({
+      const getIOSImageConfig = (name, size) => ({
         width: size,
         height: size,
         outPath: join(
@@ -217,9 +252,9 @@ class MobileApp extends Template {
 
       promises.push(resizeImageAndCopyTo(
         join(this.projectDir, splashIcon),
-        getImageConfig('icon.png', 200),
-        getImageConfig('icon@2x.png', 400),
-        getImageConfig('icon@3x.png', 600)
+        getIOSImageConfig('icon.png', 200),
+        getIOSImageConfig('icon@2x.png', 400),
+        getIOSImageConfig('icon@3x.png', 600)
       ));
     } else {
       throw new Error('No splashIcon set in template config');
@@ -510,7 +545,7 @@ class MobileApp extends Template {
           logger.debug('android build started');
 
           promises.push(runCommand('react-native run-android', this.tmpDir, {
-            noLog: true,
+            // noLog: true,
           }).then(() => {
             logger.debug('android build started');
           }));
