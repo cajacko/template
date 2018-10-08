@@ -30,7 +30,7 @@ class MobileApp extends Template {
    *
    * @return {Void} No return value
    */
-  constructor(...args) {
+  constructor(...args: *) {
     super(...args);
 
     this.ios = !!this.commander.ios;
@@ -40,8 +40,9 @@ class MobileApp extends Template {
     this.tmplSrcDir = join(this.tmplDir, 'src');
     this.libOutDir = join(this.tmpDir, 'node_modules/@cajacko/lib');
 
-    this.deployExpo = this.deployExpo.bind(this);
-    this.deployToLocal = this.deployToLocal.bind(this);
+    (this: any).deployExpo = this.deployExpo.bind(this);
+    (this: any).deployToLocal = this.deployToLocal.bind(this);
+    (this: any).prepareApp = this.prepareApp.bind(this);
 
     this.name = this.templateConfig.name || this.projectConfig.title;
     this.displayName =
@@ -54,11 +55,14 @@ class MobileApp extends Template {
       beta: this.deployExpo,
       live: this.deployExpo,
     };
-
-    this.prepareApp = this.prepareApp.bind(this);
-    this.startAndroid = this.startAndroid.bind(this);
   }
 
+  deployFuncs: { [string]: () => Promise<any> };
+  name: string;
+  displayName: string;
+  tmplDir: string;
+  tmplSrcDir: string;
+  libOutDir: string;
   templateConfig: MobileAppTemplateConfig;
   ios: boolean;
   android: boolean;
@@ -264,7 +268,6 @@ class MobileApp extends Template {
         Promise.all([
           this.installDependencies().then(() =>
             this.runIfUseLocal(() => setOutDirIsReady(this.libOutDir))),
-          // this.runIfUseLocal(() => setOutDirIsReady(this.libOutDir)),
           this.copyOrWatchSrc(),
           copyTmpl(
             join(this.tmplDir, 'config.js'),
@@ -292,7 +295,7 @@ class MobileApp extends Template {
    *
    * @return {Void} No return value (is sync func)
    */
-  replace(regex, replacement) {
+  replace(regex: string, replacement: string) {
     replace({
       regex,
       replacement,
@@ -321,7 +324,7 @@ class MobileApp extends Template {
    *
    * @return {Promise} Promise that resolves when all the commands have been run
    */
-  prepareAndRun(...commands) {
+  prepareAndRun(...commands: Array<string>) {
     let i = 0;
 
     /**
@@ -382,7 +385,7 @@ class MobileApp extends Template {
     let finishedBuildingJSCount = 0;
     let kill;
 
-    const readyToBuild = new Promise((resolve, reject) => {
+    const readyToBuild: Promise<any> = new Promise((resolve, reject) => {
       onReadyToBuild = () => {
         resolve();
       };
@@ -392,7 +395,7 @@ class MobileApp extends Template {
       }, 60 * 1000);
     });
 
-    const postBuild = new Promise((resolve, reject) => {
+    const postBuild: Promise<any> = new Promise((resolve, reject) => {
       onFinishedBuild = () => {
         kill();
         resolve();

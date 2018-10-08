@@ -2,7 +2,8 @@
 
 import { join } from 'path';
 import { runCommand, getSettings, logger } from '@cajacko/template-utils';
-import type { TemplateConfig } from '../types';
+import type { Commander, Env } from '@cajacko/template-utils/lib/types';
+import type { TemplateConfig, Command, ProjectConfig } from '../types';
 
 let installID = 0;
 
@@ -23,12 +24,12 @@ class Template {
    * @return {Void} No return value
    */
   constructor(
-    templateConfig,
-    projectConfig,
-    commander,
-    env,
-    projectDir,
-    command
+    templateConfig: TemplateConfig,
+    projectConfig: ProjectConfig,
+    commander: Commander,
+    env: Env,
+    projectDir: string,
+    command: Command
   ) {
     this.commander = commander;
     this.templateConfig = templateConfig;
@@ -42,12 +43,20 @@ class Template {
     this.libDir = join(projectDir, 'node_modules/@cajacko/lib');
     this.shouldWatch = this.command === 'start';
 
-    this.installDependencies = this.installDependencies.bind(this);
+    (this: any).installDependencies = this.installDependencies.bind(this);
   }
 
+  env: Env;
+  projectConfig: ProjectConfig;
+  filesDir: string;
+  command: Command;
+  commander: Commander;
   projectDir: string;
   tmpDir: string;
   templateConfig: TemplateConfig;
+  projectSrcDir: string;
+  libDir: string;
+  shouldWatch: boolean;
 
   /**
    * Install the dependencies for the template
@@ -57,7 +66,7 @@ class Template {
    *
    * @return {Promise} Promise that resolves when the install has finished
    */
-  installDependencies(dir, opts = {}) {
+  installDependencies(dir?: ?string, opts?: {} = {}) {
     if (this.commander.offline) return Promise.resolve();
     installID += 1;
 
@@ -77,7 +86,7 @@ class Template {
    * @return {Promise} Promise that resolves when the cb has run or straight
    * away if we don't run it
    */
-  runIfUseLocal(cb) {
+  runIfUseLocal(cb: () => Promise<any>) {
     // TODO: if command is deploy and on CI, never use local lib
     if (!this.env.USE_LOCAL_LIBS) return Promise.resolve();
 
