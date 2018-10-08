@@ -103,13 +103,67 @@ class MobileApp extends Template {
   }
 
   /**
+   * Set the app icon for all the different sizes
+   *
+   * @return {Promise} Resolves when the images have been set
+   */
+  setIcon() {
+    const { icon } = this.templateConfig;
+
+    if (!icon) {
+      throw new Error('No splashIcon set in template config');
+    }
+
+    /**
+     * Helper to get the height, width and path for the resized images
+     *
+     * @param {String} name The file name to set
+     * @param {Number} size The height and width to set
+     *
+     * @return {Object} The config for the resize
+     */
+    const getImageConfig = (name, size) => ({
+      width: size,
+      height: size,
+      outPath: join(
+        this.tmpDir,
+        'ios/template/Images.xcassets/AppIcon.appiconset',
+        `${name}.png`
+      ),
+    });
+
+    return resizeImageAndCopyTo(
+      join(this.projectDir, icon),
+      getImageConfig('Icon-App-20x20@1x', 20),
+      getImageConfig('Icon-App-20x20@2x', 40),
+      getImageConfig('Icon-App-20x20@3x', 60),
+      getImageConfig('Icon-App-29x29@1x', 29),
+      getImageConfig('Icon-App-29x29@2x', 58),
+      getImageConfig('Icon-App-29x29@3x', 87),
+      getImageConfig('Icon-App-40x40@1x', 40),
+      getImageConfig('Icon-App-40x40@2x', 80),
+      getImageConfig('Icon-App-40x40@3x', 120),
+      getImageConfig('Icon-App-57x57@1x', 57),
+      getImageConfig('Icon-App-57x57@2x', 114),
+      getImageConfig('Icon-App-60x60@2x', 120),
+      getImageConfig('Icon-App-60x60@3x', 180),
+      getImageConfig('Icon-App-72x72@1x', 72),
+      getImageConfig('Icon-App-72x72@2x', 144),
+      getImageConfig('Icon-App-76x76@1x', 76),
+      getImageConfig('Icon-App-76x76@2x', 152),
+      getImageConfig('Icon-App-83.5x83.5@2x', 167),
+      getImageConfig('Icon-Small-50x50@1x', 50),
+      getImageConfig('Icon-Small-50x50@2x', 100),
+      getImageConfig('ItunesArtwork@2x', 1024)
+    );
+  }
+
+  /**
    * Set the splash screen
    *
    * @return {Promise} Resolves when the splash screen has been set
    */
   setSplash() {
-    // Copy icon to the 3 separate sizes and locations
-
     const promises = [];
 
     const { splashBackgroundColor, splashIcon } = this.templateConfig;
@@ -214,6 +268,7 @@ class MobileApp extends Template {
           this.setAppJSON(),
           this.setPackageJSON(),
           this.setSplash(),
+          this.setIcon(),
         ]))
       .then(() => {
         this.replace('TEMPLATE_DISPLAY_NAME', this.displayName);

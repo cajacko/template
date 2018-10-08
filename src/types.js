@@ -21,6 +21,7 @@ export type TemplateKeys = Array<TemplateKey>;
 export type MobileAppTemplateConfig = {
   splashBackgroundColor: string,
   splashIcon: string,
+  icon: string,
 };
 
 export type TemplateConfig = MobileAppTemplateConfig;
