@@ -198,7 +198,7 @@ class MobileApp extends Template {
         getAndroidImageConfig('mipmap-mdpi', 48, true),
         getAndroidImageConfig('mipmap-xhdpi', 96, true),
         getAndroidImageConfig('mipmap-xxhdpi', 144, true),
-        getAndroidImageConfig('mipmap-xxxhdpi', 192, true),
+        getAndroidImageConfig('mipmap-xxxhdpi', 192, true)
       ),
     ]);
   }
@@ -534,7 +534,7 @@ class MobileApp extends Template {
         if (this.ios) {
           logger.debug('ios build started');
 
-          promises.push(runCommand('react-native run-ios', this.tmpDir, {
+          promises.push(runCommand('npx react-native run-ios', this.tmpDir, {
             noLog: true,
           }).then(() => {
             logger.debug('ios build finished');
@@ -544,7 +544,7 @@ class MobileApp extends Template {
         if (this.android) {
           logger.debug('android build started');
 
-          promises.push(runCommand('react-native run-android', this.tmpDir, {
+          promises.push(runCommand('npx react-native run-android', this.tmpDir, {
             // noLog: true,
           }).then(() => {
             logger.debug('android build started');
