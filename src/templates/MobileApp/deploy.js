@@ -1,9 +1,37 @@
 // @flow
 
-import { ask, CertStorage } from '@cajacko/template-utils';
+import { ask, CertStorage, runCommand } from '@cajacko/template-utils';
 import type { Env } from '@cajacko/template-utils/lib/types';
+import FormData from 'form-data';
+import { createReadStream } from 'fs';
+import { join } from 'path';
+import fetch from 'node-fetch';
 import { MOBILE_APP } from '../../config/requiredEnv';
 import { ensureAppKeys } from './keys';
+
+/**
+ * Build the Android release
+ *
+ * @param {String} tmpDir The tmp dir everything is built in
+ * @param {Object} opts The options passed to the func
+ *
+ * @return {Promise} Resolves When the Android build has finished
+ */
+const androidReleaseBuild = (tmpDir: string, { skipBuild } = {}) => {
+  /**
+   * Build the app or skip
+   *
+   * @return {Promise} Resolves when the build has finished or skipped
+   */
+  const build = () => {
+    if (skipBuild) return Promise.resolve();
+
+    return runCommand('./gradlew assembleRelease', join(tmpDir, 'android'));
+  };
+
+  return build().then(() =>
+    join(tmpDir, 'android/app/build/outputs/apk/release/app-release.apk'));
+};
 
 /**
  * Ask the user for an env to deploy to
@@ -23,13 +51,49 @@ const getDeployEnv = deployFuncs =>
  *
  * @return {Promise} Resolves when deployed successfully
  */
-const deployDeployGate = () => {
-  throw new Error('deployDeployGate');
-  // return this.prepareAndRun(
-  //   'yarn exp logout',
-  //   `yarn exp login -u ${EXPO_USERNAME} -p ${EXPO_PASSWORD}`,
-  //   'yarn exp publish --non-interactive'
-  // );
+const deployDeployGate = ({
+  android,
+  tmpDir,
+  deployGateToken,
+  deployGateUser,
+  skipBuild,
+}: {
+  android: boolean,
+  tmpDir: string,
+  deployGateToken: string,
+  deployGateUser: string,
+  skipBuild: boolean,
+}) => {
+  /**
+   * Build the app
+   *
+   * @return {Promise} Resolves when the app has been built
+   */
+  const buildApp = () => {
+    if (android) {
+      return androidReleaseBuild(tmpDir, { skipBuild });
+    }
+
+    throw new Error('deployDeployGate');
+  };
+
+  return buildApp()
+    .then((appPath) => {
+      const form = new FormData();
+      form.append('token', deployGateToken);
+      form.append('file', createReadStream(appPath));
+
+      return fetch(`https://deploygate.com/api/users/${deployGateUser}/apps`, {
+        method: 'POST',
+        body: form,
+      });
+    })
+    .then(res => res.json())
+    .then(({ error, message }) => {
+      if (error) {
+        throw new Error(message || 'Undefined error from deploy gate');
+      }
+    });
 };
 
 /**
@@ -45,12 +109,22 @@ const deploy = ({
   env,
   certStorage,
   tmpDir,
+  resetKeys,
+  bundleID,
+  deployGateToken,
+  deployGateUser,
+  skipBuild,
 }: {
   ios: boolean,
   android: boolean,
   env: Env,
   certStorage: CertStorage,
   tmpDir: string,
+  resetKeys: boolean,
+  bundleID: string,
+  deployGateToken: string,
+  deployGateUser: string,
+  skipBuild: boolean,
 }) => {
   const deployFuncs = {
     // 'dev-expo': this.deployExpo,
@@ -71,9 +145,22 @@ const deploy = ({
   });
 
   return ensureAppKeys({
-    ios, android, certStorage, tmpDir,
+    ios,
+    android,
+    certStorage,
+    tmpDir,
+    resetKeys,
+    bundleID,
   }).then(() =>
-    getDeployEnv(deployFuncs).then(deployFunc => deployFuncs[deployFunc]()));
+    getDeployEnv(deployFuncs).then(deployFunc =>
+      deployFuncs[deployFunc]({
+        ios,
+        android,
+        tmpDir,
+        deployGateToken,
+        deployGateUser,
+        skipBuild,
+      })));
 };
 
 export default deploy;

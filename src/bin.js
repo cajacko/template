@@ -21,6 +21,7 @@ const runOptions = [
   ['-r, --reset'],
   ['--ios'],
   ['--android'],
+  ['--skip-prepare'],
 ];
 
 registerCommand('init', init);
@@ -36,7 +37,7 @@ registerCommand('test', test, {
 registerCommand('build', runBasicCommand('build'));
 
 registerCommand('deploy', runBasicCommand('deploy'), {
-  options: runOptions,
+  options: runOptions.concat([['--reset-keys'], ['--skip-build']]),
 });
 
 registerCommand('upgrade', upgrade);

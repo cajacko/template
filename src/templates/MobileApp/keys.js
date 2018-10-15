@@ -24,15 +24,17 @@ const getAndroidKeys = (certStorage: CertStorage) => certStorage.get();
  * @param {String} keyStorePath The path to write the keystor to
  * @param {String} keyStorePassword The keystore password to set
  * @param {String} alias The keystore alias
+ * @param {String} bundleID The app bundle ID
  *
  * @return {Promise} Resolves when the keystore has been generated
  */
 const generateAndroidKeys = (
   keyStorePath: string,
   keyStorePassword: string,
-  alias: string
+  alias: string,
+  bundleID: string
 ) =>
-  runCommand(`keytool -noprompt -dname CN=mqttserver.ibm.com,OU=ID,O=IBM,L=Hursley,S=Hants,C=GB -genkey -v -keystore ${keyStorePath} -storepass password -keypass ${keyStorePassword} -alias ${alias} -keyalg RSA -keysize 2048 -validity 10000`);
+  runCommand(`keytool -genkey -v -storepass ${keyStorePassword} -keypass ${keyStorePassword} -keystore ${keyStorePath} -alias ${alias} -keyalg RSA -keysize 2048 -validity 10000 -dname CN=${bundleID},OU=,O=,L=,S=,C=US`);
 
 /**
  * Check if the android keys exist, if not create them. And put them in the
@@ -40,14 +42,20 @@ const generateAndroidKeys = (
  *
  * @param {CertStorage} certStorage The cert storage instance
  * @param {String} tmpDir The tmp dir where the certs will be applied
+ * @param {String} bundleID The app bundle ID
  *
  * @return {Promise} Resolves when the Android keys are there
  */
-export const ensureAndroidKeys = (certStorage: CertStorage, tmpDir: string) => {
+export const ensureAndroidKeys = (
+  certStorage: CertStorage,
+  tmpDir: string,
+  bundleID: string,
+  { resetKeys }: { resetKeys: boolean }
+) => {
   const keyStorePath = join(tmpDir, 'android/app/my-release-key.keystore');
 
   return remove(keyStorePath)
-    .then(() => getAndroidKeys(certStorage))
+    .then(() => (resetKeys ? null : getAndroidKeys(certStorage)))
     .then((keys) => {
       if (keys) return keys;
 
@@ -64,7 +72,7 @@ export const ensureAndroidKeys = (certStorage: CertStorage, tmpDir: string) => {
           return true;
         },
       }).then(keyStorePassword =>
-        generateAndroidKeys(keyStorePath, keyStorePassword, alias)
+        generateAndroidKeys(keyStorePath, keyStorePassword, alias, bundleID)
           .then(() =>
             certStorage.add(
               {
@@ -90,10 +98,7 @@ export const ensureAndroidKeys = (certStorage: CertStorage, tmpDir: string) => {
       if (!data) throw new Error('Could not set the android keys');
 
       return Promise.all([
-        writeFile(
-          join(tmpDir, 'android/app/my-release-key.keystore'),
-          data.keystore
-        ),
+        writeFile(keyStorePath, data.keystore),
         replaceInFile(
           join(tmpDir, 'android/gradle.properties'),
           {
@@ -134,11 +139,15 @@ export const ensureAppKeys = ({
   android,
   certStorage,
   tmpDir,
+  resetKeys,
+  bundleID,
 }: {
   ios?: boolean,
   android?: boolean,
   certStorage: CertStorage,
   tmpDir: string,
+  resetKeys: boolean,
+  bundleID: string,
 }) => {
   const promises = [];
 
@@ -146,7 +155,10 @@ export const ensureAppKeys = ({
   const addIOS = !promises.length || ios;
 
   if (addIOS) promises.push(() => ensureIOSKeys());
-  if (addAndroid) promises.push(() => ensureAndroidKeys(certStorage, tmpDir));
+  if (addAndroid) {
+    promises.push(() =>
+      ensureAndroidKeys(certStorage, tmpDir, bundleID, { resetKeys }));
+  }
 
   /**
    * Loop through each promise

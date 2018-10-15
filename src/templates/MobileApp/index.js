@@ -275,6 +275,8 @@ class MobileApp extends Template {
    * @return {Promise} Promise that resolves when the mobile app dir is ready
    */
   prepareApp() {
+    if (this.commander.skipPrepare) return Promise.resolve();
+
     logger.debug('MobileApp - prepare');
 
     return Promise.all([
@@ -382,6 +384,11 @@ class MobileApp extends Template {
         env: this.env,
         certStorage: this.certStorage,
         tmpDir: this.tmpDir,
+        resetKeys: this.commander.resetKeys,
+        bundleID: this.env.BUNDLE_ID,
+        deployGateToken: this.env.DEPLOY_GATE_TOKEN,
+        deployGateUser: this.env.DEPLOY_GATE_USER,
+        skipBuild: this.commander.skipBuild,
       }));
   }
 
