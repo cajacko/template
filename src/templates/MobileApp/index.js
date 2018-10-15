@@ -41,6 +41,7 @@ class MobileApp extends Template {
     this.libOutDir = join(this.tmpDir, 'node_modules/@cajacko/lib');
 
     (this: any).prepareApp = this.prepareApp.bind(this);
+    (this: any).setPackageJSON = this.setPackageJSON.bind(this);
 
     this.name = this.templateConfig.name || this.projectConfig.title;
     this.displayName =
@@ -288,6 +289,7 @@ class MobileApp extends Template {
         copyDependencies(localLibPath, this.tmpDir, {
           ignore: ['@cajacko/template', '@cajacko/commit'],
         }))
+      .then(this.setPackageJSON)
       .then(() =>
         Promise.all([
           this.installDependencies().then(() =>
@@ -299,7 +301,6 @@ class MobileApp extends Template {
             this.templateConfig
           ),
           this.setAppJSON(),
-          this.setPackageJSON(),
           this.setSplash(),
           this.setIcon(),
         ]))
