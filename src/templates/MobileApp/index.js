@@ -13,11 +13,11 @@ import {
 } from '@cajacko/template-utils';
 import replace from 'replace';
 import { execSync } from 'child_process';
-import Template from '../modules/Template';
-import { registerLibOutDir, setOutDirIsReady } from '../utils/libOutDirs';
-import copyAndWatch from '../utils/copyAndWatch';
-import { MOBILE_APP } from '../config/requiredEnv';
-import type { MobileAppTemplateConfig } from '../types';
+import Template from '../../modules/Template';
+import { registerLibOutDir, setOutDirIsReady } from '../../utils/libOutDirs';
+import copyAndWatch from '../../utils/copyAndWatch';
+import type { MobileAppTemplateConfig } from '../../types';
+import deploy from './deploy';
 
 /**
  * Run commands for the mobile app template
@@ -40,24 +40,13 @@ class MobileApp extends Template {
     this.tmplSrcDir = join(this.tmplDir, 'src');
     this.libOutDir = join(this.tmpDir, 'node_modules/@cajacko/lib');
 
-    (this: any).deployExpo = this.deployExpo.bind(this);
-    (this: any).deployToLocal = this.deployToLocal.bind(this);
     (this: any).prepareApp = this.prepareApp.bind(this);
 
     this.name = this.templateConfig.name || this.projectConfig.title;
     this.displayName =
       this.templateConfig.displayName || this.projectConfig.title || this.name;
-
-    this.deployFuncs = {
-      'dev-expo': this.deployExpo,
-      'dev-local': this.deployToLocal,
-      'alpha-deploygate': this.deployExpo,
-      beta: this.deployExpo,
-      live: this.deployExpo,
-    };
   }
 
-  deployFuncs: { [string]: () => Promise<any> };
   name: string;
   displayName: string;
   tmplDir: string;
@@ -385,110 +374,14 @@ class MobileApp extends Template {
    * @return {Promise} Resolves when the deploy has completed
    */
   deploy() {
-    Object.keys(MOBILE_APP).forEach((envKey) => {
-      if (!this.env[envKey]) {
-        throw new Error(`${envKey} must be set in env`);
-      }
-    });
-
-    return this.prompt().then(deploy => this.deployFuncs[deploy]());
-  }
-
-  /**
-   * Deploy to expo
-   *
-   * @return {Promise} Resolves when the deploy has completed
-   */
-  deployExpo() {
-    const { EXPO_USERNAME, EXPO_PASSWORD } = this.env;
-
-    return this.prepareAndRun(
-      'yarn exp logout',
-      `yarn exp login -u ${EXPO_USERNAME} -p ${EXPO_PASSWORD}`,
-      'yarn exp publish --non-interactive'
-    );
-  }
-
-  /**
-   * Run the expo build
-   *
-   * @return {Promise} Resolves when the build has finished
-   */
-  expoBuild() {
-    let onReadyToBuild;
-    let onFinishedBuild;
-    let finishedBuildingJSCount = 0;
-    let kill;
-
-    const readyToBuild: Promise<any> = new Promise((resolve, reject) => {
-      onReadyToBuild = () => {
-        resolve();
-      };
-
-      setTimeout(() => {
-        reject(new Error('Timed out waiting for expo packager to start'));
-      }, 60 * 1000);
-    });
-
-    const postBuild: Promise<any> = new Promise((resolve, reject) => {
-      onFinishedBuild = () => {
-        kill();
-        resolve();
-      };
-
-      readyToBuild
-        .then(() => {
-          setTimeout(() => {
-            kill();
-            reject(new Error('Timed out waiting for expo build'));
-          }, 5 * 60 * 1000);
-        })
-        .catch((e) => {
-          kill();
-          reject(e);
-        });
-    });
-
-    runCommand('yarn run exp start', this.tmpDir, {
-      getKill: (k) => {
-        kill = k;
-      },
-      onData: (data) => {
-        const string = String(data);
-
-        if (string.includes('Expo is ready')) {
-          onReadyToBuild();
-        } else if (string.includes('Finished building JavaScript')) {
-          finishedBuildingJSCount += 1;
-
-          if (finishedBuildingJSCount === 3) {
-            onFinishedBuild();
-          }
-        }
-      },
-    });
-
-    return { readyToBuild, postBuild };
-  }
-
-  /**
-   * Deploy to the local machine
-   *
-   * @return {Promise} Resolves when the deploy has completed
-   */
-  deployToLocal() {
-    const { readyToBuild, postBuild } = this.expoBuild();
-
-    return this.prepareApp()
-      .then(() => readyToBuild)
-      .then(() =>
-        Promise.all([
-          runCommand('yarn run expo build:android', this.tmpDir),
-          postBuild,
-        ]))
-      .then(() => {
-        // TODO: Grab the download url
-      });
+    return this.prepareApp().then(() =>
+      deploy({
+        ios: this.ios,
+        android: this.android,
+        env: this.env,
+        certStorage: this.certStorage,
+        tmpDir: this.tmpDir,
+      }));
   }
 
   /**

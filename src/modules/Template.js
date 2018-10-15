@@ -1,7 +1,12 @@
 // @flow
 
 import { join } from 'path';
-import { runCommand, getSettings, logger } from '@cajacko/template-utils';
+import {
+  runCommand,
+  getSettings,
+  logger,
+  CertStorage,
+} from '@cajacko/template-utils';
 import type { Commander, Env } from '@cajacko/template-utils/lib/types';
 import type { TemplateConfig, Command, ProjectConfig } from '../types';
 
@@ -20,6 +25,7 @@ class Template {
    * @param {Object} env The env object
    * @param {String} projectDir The project dir path
    * @param {String} command The command being run
+   * @param {CertStorage} certStorage The certStorage instance for the project
    *
    * @return {Void} No return value
    */
@@ -29,8 +35,10 @@ class Template {
     commander: Commander,
     env: Env,
     projectDir: string,
-    command: Command
+    command: Command,
+    certStorage: CertStorage
   ) {
+    this.certStorage = certStorage;
     this.commander = commander;
     this.templateConfig = templateConfig;
     this.projectConfig = projectConfig;
@@ -46,6 +54,7 @@ class Template {
     (this: any).installDependencies = this.installDependencies.bind(this);
   }
 
+  certStorage: CertStorage;
   env: Env;
   projectConfig: ProjectConfig;
   filesDir: string;

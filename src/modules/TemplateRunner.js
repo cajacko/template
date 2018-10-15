@@ -1,6 +1,6 @@
 // @flow
 
-import { ask } from '@cajacko/template-utils';
+import { ask, CertStorage } from '@cajacko/template-utils';
 import type {
   Commander,
   ProjectConfig,
@@ -35,8 +35,18 @@ class TemplateRunner {
     this.env = env;
     this.projectDir = projectDir;
     this.commander = commander;
+
+    if (!projectConfig.slug) {
+      throw new Error('Cannot create cert storage. No project slug defined');
+    }
+
+    this.certStorage = new CertStorage(
+      projectConfig.slug,
+      `git@github.com:cajacko/${projectConfig.slug}-certificates.git`
+    );
   }
 
+  certStorage: CertStorage;
   commander: Commander;
   projectConfig: ProjectConfig;
   env: Env;
@@ -50,7 +60,7 @@ class TemplateRunner {
    * @return {Promise} Promise that resolves when the command has been run
    */
   runCommand(command: Command) {
-    return this.getTemplatesToRun().then(templateKeys =>
+    return this.getTemplatesToRun().then((templateKeys: TemplateKeys) =>
       this.conditionalResetAndRun(command, templateKeys));
   }
 
@@ -61,16 +71,18 @@ class TemplateRunner {
    *
    * @return {Promise} Promise that resolves with the templates to run
    */
-  getTemplatesToRun() {
+  getTemplatesToRun(): Promise<TemplateKeys> {
     const { template } = this.commander;
 
     if (template) return Promise.resolve([template]);
 
-    if (!this.projectConfig || !this.projectConfig.templates) {
+    const { projectConfig } = this;
+
+    if (!projectConfig || !projectConfig.templates) {
       throw new Error('Could not get any templates from the project config');
     }
 
-    const templateKeys = Object.keys(this.projectConfig.templates);
+    const templateKeys: TemplateKeys = Object.keys(projectConfig.templates);
 
     if (!this.commander.interactive) {
       return Promise.resolve(templateKeys);
@@ -144,13 +156,16 @@ class TemplateRunner {
         throw new Error(`No template is available for "${templateConfig.type}"`);
       }
 
+      const certStorage = this.certStorage.registerSub(templateKey);
+
       const template = new Template(
         templateConfig,
         this.projectConfig,
         this.commander,
         this.env,
         this.projectDir,
-        command
+        command,
+        certStorage
       );
 
       if (template[command]) {
