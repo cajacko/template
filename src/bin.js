@@ -37,7 +37,11 @@ registerCommand('test', test, {
 registerCommand('build', runBasicCommand('build'));
 
 registerCommand('deploy', runBasicCommand('deploy'), {
-  options: runOptions.concat([['--reset-keys'], ['--skip-build']]),
+  options: runOptions.concat([
+    ['--reset-keys'],
+    ['--skip-build'],
+    ['--deploy-env [deployEnv]'],
+  ]),
 });
 
 registerCommand('upgrade', upgrade);

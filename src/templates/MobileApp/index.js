@@ -389,6 +389,7 @@ class MobileApp extends Template {
         deployGateToken: this.env.DEPLOY_GATE_TOKEN,
         deployGateUser: this.env.DEPLOY_GATE_USER,
         skipBuild: this.commander.skipBuild,
+        deployEnv: this.commander.deployEnv,
       }));
   }
 

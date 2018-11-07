@@ -34,17 +34,21 @@ const androidReleaseBuild = (tmpDir: string, { skipBuild } = {}) => {
 };
 
 /**
- * Ask the user for an env to deploy to
+ * Ask the user for an env to deploy to, or validate the passed in env
  *
  * @param {Object} deployFuncs The different envs to deploy to
+ * @param {String} [deployEnv] The passed env to deploy to
  *
  * @return {Promise} Resolves with the key of the deploy func to run
  */
-const getDeployEnv = deployFuncs =>
-  ask({
+const getDeployEnv = (deployFuncs, deployEnv) => {
+  if (deployEnv && deployFuncs[deployEnv]) return Promise.resolve(deployEnv);
+
+  return ask({
     type: 'list',
     choices: Object.keys(deployFuncs),
   });
+};
 
 /**
  * Deploy to DeployGate
@@ -114,6 +118,7 @@ const deploy = ({
   deployGateToken,
   deployGateUser,
   skipBuild,
+  deployEnv,
 }: {
   ios: boolean,
   android: boolean,
@@ -125,6 +130,7 @@ const deploy = ({
   deployGateToken: string,
   deployGateUser: string,
   skipBuild: boolean,
+  deployEnv?: ?string,
 }) => {
   const deployFuncs = {
     // 'dev-expo': this.deployExpo,
@@ -152,7 +158,7 @@ const deploy = ({
     resetKeys,
     bundleID,
   }).then(() =>
-    getDeployEnv(deployFuncs).then(deployFunc =>
+    getDeployEnv(deployFuncs, deployEnv).then(deployFunc =>
       deployFuncs[deployFunc]({
         ios,
         android,
