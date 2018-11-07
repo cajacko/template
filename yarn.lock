@@ -114,26 +114,10 @@
     punycode "^2.1.1"
     unicode-emoji-annotations "^1.0.4"
 
-"@cajacko/template-utils@https://github.com/cajacko/template-utils.git#v0.11.0":
-  version "0.11.0"
-  resolved "https://github.com/cajacko/template-utils.git#62112099711248300fac8962b3134b7b72a6eafa"
-  dependencies:
-    chalk "^2.4.1"
-    commander "^2.17.1"
-    ejs "^2.6.1"
-    fs-extra "^7.0.0"
-    inquirer "^6.2.0"
-    is-git-repository "^1.1.1"
-    jimp "^0.5.3"
-    lodash "^4.17.10"
-    react-dev-utils "^5.0.2"
-    semver "^5.5.1"
-    simple-git "^1.96.0"
-    watch "^1.0.2"
-
-"@cajacko/template-utils@https://github.com/cajacko/template-utils.git#v0.12.0":
-  version "0.12.0"
-  resolved "https://github.com/cajacko/template-utils.git#8e2c6b280b03cd21afcef7b7db0b4b6d2810d177"
+"@cajacko/template-utils@0.13.0":
+  version "0.13.0"
+  resolved "https://registry.yarnpkg.com/@cajacko/template-utils/-/template-utils-0.13.0.tgz#4dd3169bce258bcd588daf13e8f3e20f28b34078"
+  integrity sha512-ez/avyzj17eBJfLE1ke4gpSGh+VKZWyZ3XwTkiuv7O7VRpyTmOxXiRYzcMMdkgU1zEsiAk3qvNe2j5CUOn0vBA==
   dependencies:
     chalk "^2.4.1"
     commander "^2.17.1"
