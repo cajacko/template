@@ -42,7 +42,9 @@ class TemplateRunner {
 
     this.certStorage = new CertStorage(
       projectConfig.slug,
-      `https://github.com/cajacko/${projectConfig.slug}-certificates.git`,
+      `https://${this.env.GITHUB_TOKEN}@github.com/cajacko/${
+        projectConfig.slug
+      }-certificates.git`,
       null,
       { preventDelete: true }
     );
