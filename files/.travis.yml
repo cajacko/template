@@ -4,4 +4,4 @@ services:
   - docker
 
 script:
-  - ./run.sh
+  - ./scripts/deployAndroid.sh

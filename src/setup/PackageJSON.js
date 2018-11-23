@@ -20,7 +20,6 @@ const projectJSON = {
     postinstall: 'template postinstall',
     precommit: 'template precommit',
     commitmsg: 'commit --validate-commit -u',
-    prepare: 'template prepare',
   },
 };
 
@@ -111,12 +110,17 @@ class PackageJSON extends SetupTemplate {
 
   /**
    * After file setup, setup the defaults for the package.json file. Doing it
-   * here in case any other setup fiels want to do stuff before hand
+   * here in case any other setup files want to do stuff before hand
    *
    * @return {Promise} Promise that resovles when we've queued up everything
    */
   postSetupFiles() {
     if (this.projectConfig.ignorePackageJSON) return Promise.resolve();
+
+    if (this.templatesUsed.includes('mobile-app')) {
+      this.packageJSON.scripts['docker:deploy'] =
+        'yarn install && yarn deploy -t main-app --deploy-env alpha-deploygate --android';
+    }
 
     if (this.projectConfig) {
       const {

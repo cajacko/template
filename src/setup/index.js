@@ -18,6 +18,7 @@ import Changelog from './Changelog';
 import JSDocs from './JSDocs';
 import Babel from './Babel';
 import NPMIgnore from './NPMIgnore';
+import Docker from './Docker';
 import ProjectJSON from './ProjectJSON';
 
 const setupTemplates = {
@@ -40,6 +41,7 @@ const setupTemplates = {
   babel: Babel,
   npmignore: NPMIgnore,
   projectjson: ProjectJSON,
+  docker: Docker,
 };
 
 export default setupTemplates;
