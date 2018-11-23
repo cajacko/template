@@ -11,6 +11,12 @@ import { copy } from 'fs-extra';
 import { join } from 'path';
 import SetupRunner from '../modules/SetupRunner';
 
+const qs = [
+  'Do you have branch permission setup correctly in GitHub',
+  'Have you setup travis for this project?',
+  "Is travis configured to only run on PR's",
+];
+
 /**
  * Initialise the project
  *
@@ -39,17 +45,14 @@ const init = () =>
             lastLibVersion
           );
 
-          return Promise.resolve();
           return setupRunner.runSteps();
         }));
     })
     .then(() =>
-      ask([
-        {
-          type: 'confirm',
-          message: 'Do you have branch permission setup correctly in GitHub',
-          name: 'branchProtection',
-        },
-      ]));
+      ask(qs.map((message, i) => ({
+        type: 'confirm',
+        name: `qs-${i}`,
+        message,
+      }))));
 
 export default init;
