@@ -1,3 +1,5 @@
+// @flow
+
 import { parseEnvFromJSON } from '@cajacko/template-utils';
 import SetupTemplate from '../modules/SetupTemplate';
 import { MOBILE_APP } from '../config/requiredEnv';
@@ -5,7 +7,17 @@ import { MOBILE_APP } from '../config/requiredEnv';
 export const exampleEmail = 'example@email.com';
 export const examplePassword = 'examplepassword';
 
+/**
+ * Setup the env files
+ */
 class Env extends SetupTemplate {
+  /**
+   * Set the initial env files vars
+   *
+   * @param  {...any} args The args passed into the SetupTemplate
+   *
+   * @return {Void} No return value
+   */
   constructor(...args) {
     super(...args);
 
@@ -14,6 +26,11 @@ class Env extends SetupTemplate {
     };
   }
 
+  /**
+   * During the setup files step, define the env file to write
+   *
+   * @return {Void} No return value
+   */
   setupFiles() {
     if (this.templatesUsed.includes('mobile-app')) {
       this.envFile = { ...this.envFile, ...MOBILE_APP };
